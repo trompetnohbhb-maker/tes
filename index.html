@@ -10,80 +10,125 @@
             --text: #e0e0f0;
             --accent: #a855f7;
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: var(--bg);
-            font-family: 'Inter', system-ui, sans-serif;
+            background: #000;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             overflow: hidden;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
-        #gameCanvas { display:block; position:fixed; top:0; left:0; width:100%; height:100%; outline:none; }
+        canvas#gameCanvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            outline: none;
+        }
         #ui {
-            position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:10;
-            color: white; font-weight: 500;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 20;
+            color: white;
         }
-        .weapon-slot {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px; padding: 10px 20px; display: flex; gap: 15px; font-size: 0.9rem;
-        }
-        .weapon-slot span { opacity: 0.5; }
-        .weapon-slot .active { opacity: 1; color: #ffdd57; font-weight: 700; }
         .crosshair {
-            position: absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-            width: 20px; height: 20px;
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px; height: 6px;
+            border: 2px solid rgba(255,255,255,0.9);
+            border-radius: 50%;
+            pointer-events: none;
         }
-        .crosshair::before, .crosshair::after { content:''; position:absolute; background:rgba(255,255,255,0.9); }
-        .crosshair::before { width:2px; height:20px; left:9px; top:0; }
-        .crosshair::after { width:20px; height:2px; left:0; top:9px; }
         .scope-overlay {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.7) 70%);
-            pointer-events: none; opacity:0; transition: opacity 0.2s;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.85) 70%);
+            opacity: 0; transition: opacity 0.2s;
+            pointer-events: none;
+            display: flex; align-items: center; justify-content: center;
         }
-        .scope-overlay.active { opacity:1; }
+        .scope-overlay.active { opacity: 1; }
         .scope-crosshair {
-            position: absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-            width: 4px; height: 100%; background: rgba(0,0,0,0.6);
+            width: 2px; height: 100%; background: rgba(0,0,0,0.5);
             box-shadow: 0 0 0 1px rgba(255,255,255,0.5);
         }
         .scope-crosshair::after {
-            content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-            width: 100vw; height: 4px; background: rgba(0,0,0,0.6);
+            content: ''; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw; height: 2px; background: rgba(0,0,0,0.5);
             box-shadow: 0 0 0 1px rgba(255,255,255,0.5);
         }
+        .weapon-hud {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.7); border-radius: 12px;
+            padding: 12px 20px; display: flex; gap: 20px;
+            font-weight: 500; font-size: 0.9rem;
+            pointer-events: none;
+        }
+        .weapon-hud span { opacity: 0.6; }
+        .weapon-hud .active { opacity: 1; color: #ffd966; font-weight: 700; }
+        .ammo-display {
+            position: absolute; bottom: 40px; right: 40px;
+            font-size: 1.5rem; font-weight: 700;
+            text-shadow: 0 0 10px black;
+            pointer-events: none;
+        }
+        .health-bar {
+            position: absolute; bottom: 40px; left: 40px;
+            width: 200px; height: 10px; background: rgba(0,0,0,0.5);
+            border-radius: 5px; overflow: hidden;
+        }
+        .health-fill {
+            height: 100%; width: 100%;
+            background: linear-gradient(90deg, #ff4d6d, #ff6b6b);
+            transition: width 0.3s;
+        }
         .cheat-menu {
-            position: absolute; top: 80px; right: 20px; background: rgba(0,0,0,0.85);
-            border: 1px solid #a855f7; border-radius: 12px; padding: 15px;
-            pointer-events: auto; display: none; min-width: 180px;
-            backdrop-filter: blur(10px);
+            position: absolute; top: 80px; right: 20px;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            border: 1px solid #a855f7; border-radius: 12px;
+            padding: 15px; display: none; min-width: 200px;
+            pointer-events: auto;
         }
         .cheat-menu.visible { display: block; }
-        .cheat-item { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; color: #ccc; font-size: 0.9rem; }
+        .cheat-item {
+            display: flex; justify-content: space-between; align-items: center;
+            margin: 8px 0; color: #ddd; font-size: 0.9rem;
+        }
         .cheat-item label { cursor: pointer; }
         .cheat-item input[type="checkbox"] { accent-color: #a855f7; }
         .pause-overlay {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
-            pointer-events: none; opacity:0; transition: opacity 0.3s;
-            font-size: 2rem; font-weight: 800; backdrop-filter: blur(5px);
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+            font-size: 2.5rem; font-weight: 800;
         }
-        .pause-overlay.active { opacity:1; }
-        .info-text {
-            position: absolute; bottom: 80px; left: 20px; font-size: 0.8rem; opacity:0.7;
+        .pause-overlay.active { opacity: 1; }
+        .controls-hint {
+            position: absolute; bottom: 20px; left: 20px;
+            font-size: 0.7rem; opacity: 0.6;
+        }
+        #espCanvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
+    <canvas id="gameCanvas"></canvas>
     <div id="ui">
-        <div class="weapon-slot" id="weaponSlots"></div>
         <div class="crosshair"></div>
         <div class="scope-overlay" id="scopeOverlay">
             <div class="scope-crosshair"></div>
         </div>
+        <div class="weapon-hud" id="weaponHud"></div>
+        <div class="ammo-display" id="ammoDisplay">12/60</div>
+        <div class="health-bar"><div class="health-fill" id="healthFill"></div></div>
         <div class="cheat-menu" id="cheatMenu">
-            <h3 style="color:#a855f7; margin-bottom:10px;">CHEAT MENU</h3>
+            <h3 style="color:#a855f7; margin-bottom: 10px;">CHEAT MENU</h3>
             <div class="cheat-item">
                 <label for="silentAim">Silent Aim</label>
                 <input type="checkbox" id="silentAim">
@@ -98,10 +143,9 @@
             </div>
         </div>
         <div class="pause-overlay" id="pauseOverlay">PAUSED</div>
-        <div class="info-text">WASD: Move | Mouse: Look | Click: Shoot | R: Reload | Space: Jump | =: Pause | 1-0: Weapons | P(x10): Cheat</div>
-        <canvas id="espCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></canvas>
+        <div class="controls-hint">WASD: Move | Mouse: Look | Click: Shoot | R: Reload | Space: Jump | =: Pause | 1-0: Weapons | P(x10): Cheat</div>
+        <canvas id="espCanvas"></canvas>
     </div>
-    <canvas id="gameCanvas"></canvas>
 
     <script type="importmap">
         {
@@ -116,21 +160,22 @@
         import * as THREE from 'three';
         import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
-        // DOM
+        // === DOM ELEMENTS ===
         const canvas = document.getElementById('gameCanvas');
         const scopeOverlay = document.getElementById('scopeOverlay');
+        const weaponHud = document.getElementById('weaponHud');
+        const ammoDisplay = document.getElementById('ammoDisplay');
+        const healthFill = document.getElementById('healthFill');
         const cheatMenu = document.getElementById('cheatMenu');
         const pauseOverlay = document.getElementById('pauseOverlay');
-        const weaponSlotsEl = document.getElementById('weaponSlots');
         const espCanvas = document.getElementById('espCanvas');
         const ctxEsp = espCanvas.getContext('2d');
 
-        // State
+        // === GAME STATE ===
         let paused = false;
         let health = 100;
         let currentWeaponIndex = 0;
         let weapons = [];
-        let ammoReserve = {};
         let canShoot = true;
         let isScoped = false;
         let flyActive = false;
@@ -139,12 +184,34 @@
         let cheatVisible = false;
         let pressCount = 0;
         let pressTimer = null;
-        let gameActive = true;
+        let enemyHealth = 1000;
+        const maxEnemyHealth = 1000;
 
-        // Three.js
+        // Weapon definitions
+        const weaponDefs = [
+            { name:'Glock', damage:15, fireRate:300, magSize:15, reserve:60, color:0xaaaaaa },
+            { name:'Deagle', damage:35, fireRate:500, magSize:7, reserve:35, color:0xccaa44 },
+            { name:'UMP', damage:22, fireRate:100, magSize:25, reserve:100, color:0x888888 },
+            { name:'AK47', damage:28, fireRate:120, magSize:30, reserve:90, color:0xaa8866 },
+            { name:'M4A1', damage:25, fireRate:90, magSize:30, reserve:90, color:0x556644 },
+            { name:'AWM', damage:100, fireRate:1500, magSize:5, reserve:15, color:0x446622, scope:true },
+            { name:'Shotgun', damage:18, fireRate:800, magSize:8, reserve:32, color:0x884422, pellets:6 },
+            { name:'MP5', damage:20, fireRate:80, magSize:30, reserve:120, color:0x666666 },
+            { name:'P90', damage:18, fireRate:60, magSize:50, reserve:100, color:0x555577 },
+            { name:'M249', damage:22, fireRate:70, magSize:100, reserve:200, color:0x665533 }
+        ];
+
+        weapons = weaponDefs.map((def, i) => ({
+            ...def,
+            currentAmmo: def.magSize,
+            reserve: def.reserve,
+            lastShotTime: 0
+        }));
+
+        // === THREE.JS SETUP ===
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x1a1a2e);
-        scene.fog = new THREE.Fog(0x1a1a2e, 20, 80);
+        scene.fog = new THREE.Fog(0x1a1a2e, 30, 100);
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 100);
         camera.position.set(0, 1.6, 5);
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -155,164 +222,171 @@
 
         // Lighting
         scene.add(new THREE.AmbientLight(0x404060, 0.6));
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        dirLight.position.set(10,20,5);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+        dirLight.position.set(10, 20, 5);
         dirLight.castShadow = true;
-        dirLight.shadow.mapSize.set(1024,1024);
+        dirLight.shadow.mapSize.set(1024, 1024);
         scene.add(dirLight);
 
         // Ground
-        const ground = new THREE.Mesh(new THREE.PlaneGeometry(50,50), new THREE.MeshStandardMaterial({color:0x2a2a3e}));
+        const groundGeo = new THREE.PlaneGeometry(50, 50);
+        const groundMat = new THREE.MeshStandardMaterial({ color: 0x2a2a3e, roughness: 0.8 });
+        const ground = new THREE.Mesh(groundGeo, groundMat);
         ground.rotation.x = -Math.PI/2;
         ground.receiveShadow = true;
         scene.add(ground);
         scene.add(new THREE.GridHelper(50, 40, 0x444466, 0x333355));
 
-        // Player body (visible in third person? no, first person only)
-        // Weapon model (group attached to camera)
-        const weaponGroup = new THREE.Group();
-        camera.add(weaponGroup);
-        weaponGroup.position.set(0.3, -0.25, -0.5);
-        scene.add(camera);
+        // Enemy humanoid (static center)
+        const enemyGroup = new THREE.Group();
+        enemyGroup.position.set(0, 0, 0);
+        // Body
+        const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.3), new THREE.MeshStandardMaterial({color:0xff4d4d}));
+        body.position.y = 0.8;
+        body.castShadow = true; body.receiveShadow = true;
+        enemyGroup.add(body);
+        // Head
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.25), new THREE.MeshStandardMaterial({color:0xffaaaa}));
+        head.position.y = 1.5;
+        head.castShadow = true; head.receiveShadow = true;
+        enemyGroup.add(head);
+        // Arms
+        const armGeo = new THREE.BoxGeometry(0.2, 0.6, 0.2);
+        const leftArm = new THREE.Mesh(armGeo, new THREE.MeshStandardMaterial({color:0xff4d4d}));
+        leftArm.position.set(-0.45, 0.9, 0);
+        leftArm.castShadow = true;
+        enemyGroup.add(leftArm);
+        const rightArm = new THREE.Mesh(armGeo, new THREE.MeshStandardMaterial({color:0xff4d4d}));
+        rightArm.position.set(0.45, 0.9, 0);
+        rightArm.castShadow = true;
+        enemyGroup.add(rightArm);
+        // Legs
+        const legGeo = new THREE.BoxGeometry(0.25, 0.6, 0.25);
+        const leftLeg = new THREE.Mesh(legGeo, new THREE.MeshStandardMaterial({color:0xff4d4d}));
+        leftLeg.position.set(-0.2, 0.1, 0);
+        leftLeg.castShadow = true;
+        enemyGroup.add(leftLeg);
+        const rightLeg = new THREE.Mesh(legGeo, new THREE.MeshStandardMaterial({color:0xff4d4d}));
+        rightLeg.position.set(0.2, 0.1, 0);
+        rightLeg.castShadow = true;
+        enemyGroup.add(rightLeg);
+        scene.add(enemyGroup);
 
-        // Create enemy (static humanoid at center)
-        function createEnemy() {
-            const group = new THREE.Group();
-            group.position.set(0, 1, 0);
-            // body
-            const body = new THREE.Mesh(new THREE.BoxGeometry(0.6,0.8,0.3), new THREE.MeshStandardMaterial({color:0xff4444}));
-            body.position.y = 0.4;
-            group.add(body);
-            // head
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.25), new THREE.MeshStandardMaterial({color:0xff8888}));
-            head.position.y = 1.0;
-            group.add(head);
-            // arms
-            const armGeo = new THREE.BoxGeometry(0.2,0.6,0.2);
-            const leftArm = new THREE.Mesh(armGeo, new THREE.MeshStandardMaterial({color:0xff4444}));
-            leftArm.position.set(-0.5,0.5,0);
-            group.add(leftArm);
-            const rightArm = new THREE.Mesh(armGeo, new THREE.MeshStandardMaterial({color:0xff4444}));
-            rightArm.position.set(0.5,0.5,0);
-            group.add(rightArm);
-            // legs
-            const legGeo = new THREE.BoxGeometry(0.25,0.6,0.25);
-            const leftLeg = new THREE.Mesh(legGeo, new THREE.MeshStandardMaterial({color:0xff4444}));
-            leftLeg.position.set(-0.2,-0.2,0);
-            group.add(leftLeg);
-            const rightLeg = new THREE.Mesh(legGeo, new THREE.MeshStandardMaterial({color:0xff4444}));
-            rightLeg.position.set(0.2,-0.2,0);
-            group.add(rightLeg);
-            group.castShadow = true;
-            group.receiveShadow = true;
-            scene.add(group);
-            return group;
-        }
-        const enemy = createEnemy();
-        let enemyHealth = 1000;
-
-        // Weapon definitions
-        const weaponDefs = [
-            { name:'Glock', damage:15, fireRate:300, magSize:15, reserve:60, recoil:0.02, color:0xcccccc },
-            { name:'Deagle', damage:35, fireRate:500, magSize:7, reserve:35, recoil:0.06, color:0xddcc44 },
-            { name:'UMP', damage:22, fireRate:100, magSize:25, reserve:100, recoil:0.03, color:0x888888 },
-            { name:'AK47', damage:28, fireRate:120, magSize:30, reserve:90, recoil:0.04, color:0xaa8866 },
-            { name:'M4A1', damage:25, fireRate:90, magSize:30, reserve:90, recoil:0.03, color:0x556644 },
-            { name:'AWM', damage:100, fireRate:1500, magSize:5, reserve:15, recoil:0.12, color:0x446622, scope:true },
-            { name:'Shotgun', damage:18, fireRate:800, magSize:8, reserve:32, recoil:0.08, color:0x884422, pellets:6 },
-            { name:'MP5', damage:20, fireRate:80, magSize:30, reserve:120, recoil:0.025, color:0x666666 },
-            { name:'P90', damage:18, fireRate:60, magSize:50, reserve:100, recoil:0.02, color:0x555577 },
-            { name:'M249', damage:22, fireRate:70, magSize:100, reserve:200, recoil:0.035, color:0x665533 }
-        ];
-
-        // Initialize weapons
-        weapons = weaponDefs.map((def, index) => ({
-            ...def,
-            currentAmmo: def.magSize,
-            reserve: def.reserve,
-            lastShotTime: 0
-        }));
-        // Set initial weapon to Glock
-        currentWeaponIndex = 0;
+        // First-person arms and weapon
+        const fpGroup = new THREE.Group();
+        camera.add(fpGroup);
+        fpGroup.position.set(0.25, -0.3, -0.4);
+        // Tangan kanan
+        const handGeo = new THREE.BoxGeometry(0.12, 0.2, 0.12);
+        const handMat = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
+        const rightHand = new THREE.Mesh(handGeo, handMat);
+        rightHand.position.set(0.15, -0.1, -0.1);
+        fpGroup.add(rightHand);
+        // Senjata model (diupdate sesuai weapon)
+        const gunGroup = new THREE.Group();
+        fpGroup.add(gunGroup);
         updateWeaponModel();
 
         function updateWeaponModel() {
-            // Clear weapon group
-            while(weaponGroup.children.length) weaponGroup.remove(weaponGroup.children[0]);
+            while(gunGroup.children.length) gunGroup.remove(gunGroup.children[0]);
             const weapon = weapons[currentWeaponIndex];
-            const geo = new THREE.BoxGeometry(0.08, 0.15, 0.4);
-            const mat = new THREE.MeshStandardMaterial({ color: weapon.color });
-            const gun = new THREE.Mesh(geo, mat);
-            gun.position.set(0, -0.05, -0.2);
-            weaponGroup.add(gun);
-            // Simple barrel
-            const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.5), new THREE.MeshStandardMaterial({color:0x111111}));
-            barrel.position.set(0, -0.05, -0.5);
-            weaponGroup.add(barrel);
+            const gunBody = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.12, 0.4), new THREE.MeshStandardMaterial({color: weapon.color}));
+            gunBody.position.set(0, -0.02, -0.2);
+            gunGroup.add(gunBody);
+            const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.5), new THREE.MeshStandardMaterial({color: 0x111111}));
+            barrel.position.set(0, -0.02, -0.45);
+            gunGroup.add(barrel);
         }
 
-        // UI weapon slots
-        function updateWeaponUI() {
-            weaponSlotsEl.innerHTML = weapons.map((w,i) => 
+        // Muzzle flash light
+        const muzzleLight = new THREE.PointLight(0xffaa00, 2, 5);
+        muzzleLight.position.set(0, -0.02, -0.7);
+        fpGroup.add(muzzleLight);
+        muzzleLight.visible = false;
+
+        // Audio context for gun sounds
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(freq, duration, type='square') {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        // === WEAPON HUD ===
+        function updateHUD() {
+            weaponHud.innerHTML = weapons.map((w,i) => 
                 `<span class="${i===currentWeaponIndex?'active':''}">${i+1}. ${w.name}</span>`
             ).join('');
+            const cw = weapons[currentWeaponIndex];
+            ammoDisplay.textContent = `${cw.currentAmmo}/${cw.reserve}`;
         }
-        updateWeaponUI();
+        updateHUD();
 
-        // Shooting function
+        // === GAME FUNCTIONS ===
         function shoot() {
-            if (paused || !controls.isLocked || !canShoot || gameActive===false) return;
+            if (paused || !controls.isLocked || !canShoot) return;
             const weapon = weapons[currentWeaponIndex];
-            if (weapon.currentAmmo <= 0) { /* empty */ return; }
+            if (weapon.currentAmmo <= 0) return;
             const now = performance.now();
             if (now - weapon.lastShotTime < weapon.fireRate) return;
             weapon.lastShotTime = now;
             weapon.currentAmmo--;
             canShoot = false;
-            setTimeout(()=>{ canShoot = true; }, weapon.fireRate);
+            setTimeout(() => { canShoot = true; }, weapon.fireRate);
 
-            // Recoil
-            camera.rotation.x += (Math.random()-0.5)*weapon.recoil;
-            camera.rotation.y += (Math.random()-0.5)*weapon.recoil;
+            // Muzzle flash
+            muzzleLight.visible = true;
+            setTimeout(() => { muzzleLight.visible = false; }, 50);
 
-            // Raycast for hit
+            // Sound
+            playSound(200, 0.15, 'square');
+
+            // Raycast shooting
             const raycaster = new THREE.Raycaster();
             let direction = new THREE.Vector3(0,0,-1).applyQuaternion(camera.quaternion);
-            if (silentAimActive && enemy) {
-                // Aim at enemy head
-                const headPos = enemy.position.clone();
-                headPos.y += 1.0; // head
+            if (silentAimActive) {
+                const headPos = enemyGroup.position.clone();
+                headPos.y += 1.5;
                 direction = headPos.sub(camera.position).normalize();
             }
             raycaster.set(camera.position, direction);
 
-            // Multiple pellets for shotgun
             const pellets = weapon.pellets || 1;
             for (let i=0; i<pellets; i++) {
-                if (pellets>1) {
-                    const spread = 0.08;
-                    direction.x += (Math.random()-0.5)*spread;
-                    direction.y += (Math.random()-0.5)*spread;
-                    direction.z += (Math.random()-0.5)*spread;
-                    direction.normalize();
+                let dir = direction.clone();
+                if (pellets > 1) {
+                    dir.x += (Math.random()-0.5)*0.1;
+                    dir.y += (Math.random()-0.5)*0.1;
+                    dir.z += (Math.random()-0.5)*0.1;
+                    dir.normalize();
                 }
-                const intersects = raycaster.intersectObject(enemy, true);
+                raycaster.set(camera.position, dir);
+                const intersects = raycaster.intersectObject(enemyGroup, true);
                 if (intersects.length > 0) {
                     enemyHealth -= weapon.damage;
+                    // Hit effect
+                    const hitPoint = intersects[0].point;
+                    const flash = new THREE.PointLight(0xff0000, 1, 3);
+                    flash.position.copy(hitPoint);
+                    scene.add(flash);
+                    setTimeout(() => scene.remove(flash), 100);
                     if (enemyHealth <= 0) {
-                        enemyHealth = 0;
-                        // Enemy defeated (reset or something)
-                        alert('Enemy eliminated!');
-                        enemyHealth = 1000;
+                        enemyHealth = maxEnemyHealth;
+                        playSound(600, 0.2, 'sine');
                     }
                 }
             }
 
-            // Update ammo display
-            document.getElementById('ammoCount').textContent = `${weapon.currentAmmo}/${weapon.reserve}`;
+            updateHUD();
         }
 
-        // Reload
         function reload() {
             const weapon = weapons[currentWeaponIndex];
             if (weapon.currentAmmo === weapon.magSize || weapon.reserve <= 0) return;
@@ -320,35 +394,10 @@
             const transfer = Math.min(needed, weapon.reserve);
             weapon.currentAmmo += transfer;
             weapon.reserve -= transfer;
-            document.getElementById('ammoCount').textContent = `${weapon.currentAmmo}/${weapon.reserve}`;
+            updateHUD();
         }
 
-        // Switch weapon with number keys
-        window.addEventListener('keydown', (e) => {
-            if (paused) return;
-            const key = e.key;
-            if (key >= '1' && key <= '9') {
-                const index = parseInt(key) - 1;
-                if (index < weapons.length) {
-                    currentWeaponIndex = index;
-                    updateWeaponModel();
-                    updateWeaponUI();
-                }
-            } else if (key === '0') {
-                currentWeaponIndex = 9;
-                updateWeaponModel();
-                updateWeaponUI();
-            } else if (key === 'r' || key === 'R') {
-                reload();
-            } else if (key === '=') {
-                togglePause();
-            } else if (key === 'p' || key === 'P') {
-                handleCheatKey();
-            }
-            // Movement keys handled by state
-        });
-
-        // Cheat detection
+        // Cheat key detection
         function handleCheatKey() {
             if (pressTimer) clearTimeout(pressTimer);
             pressCount++;
@@ -356,21 +405,10 @@
             if (pressCount >= 10) {
                 pressCount = 0;
                 cheatVisible = !cheatVisible;
-                cheatMenu.style.display = cheatVisible ? 'block' : 'none';
+                cheatMenu.classList.toggle('visible', cheatVisible);
             }
         }
 
-        // Cheat toggles
-        document.getElementById('silentAim').addEventListener('change', (e) => silentAimActive = e.target.checked);
-        document.getElementById('flyMode').addEventListener('change', (e) => {
-            flyActive = e.target.checked;
-            if (flyActive) {
-                // disable gravity simulation? We'll handle in movement
-            }
-        });
-        document.getElementById('espToggle').addEventListener('change', (e) => espActive = e.target.checked);
-
-        // Pause toggle
         function togglePause() {
             paused = !paused;
             if (paused) {
@@ -378,19 +416,43 @@
                 pauseOverlay.classList.add('active');
             } else {
                 pauseOverlay.classList.remove('active');
-                // Mouse lock will be re-enabled by user click
+                // User must click to lock again
             }
         }
 
-        // Mouse click to lock and shoot
+        // === EVENT LISTENERS ===
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '=') {
+                togglePause();
+                return;
+            }
+            if (paused) return;
+            const key = e.key.toLowerCase();
+            if (key === 'r') reload();
+            if (key === 'p') handleCheatKey();
+            if (key >= '1' && key <= '9') {
+                currentWeaponIndex = parseInt(key) - 1;
+                updateWeaponModel();
+                updateHUD();
+            }
+            if (key === '0') {
+                currentWeaponIndex = 9;
+                updateWeaponModel();
+                updateHUD();
+            }
+        });
+
         canvas.addEventListener('click', () => {
             if (!paused && !controls.isLocked) {
                 controls.lock();
             }
         });
+
         document.addEventListener('mousedown', (e) => {
-            if (e.button === 0 && controls.isLocked && !paused) shoot();
-            if (e.button === 2) { // right click for scope
+            if (e.button === 0 && controls.isLocked && !paused) {
+                shoot();
+            }
+            if (e.button === 2) {
                 e.preventDefault();
                 if (weapons[currentWeaponIndex].scope) {
                     isScoped = !isScoped;
@@ -400,87 +462,80 @@
                 }
             }
         });
+
         document.addEventListener('contextmenu', e => e.preventDefault());
 
+        // Cheat toggles
+        document.getElementById('silentAim').addEventListener('change', e => silentAimActive = e.target.checked);
+        document.getElementById('flyMode').addEventListener('change', e => flyActive = e.target.checked);
+        document.getElementById('espToggle').addEventListener('change', e => espActive = e.target.checked);
+
         // Movement state
-        const moveState = { forward: false, backward: false, left: false, right: false, up: false, down: false };
+        const moveState = { forward:false, backward:false, left:false, right:false, jump:false };
         window.addEventListener('keydown', (e) => {
             if (paused || !controls.isLocked) return;
             switch(e.key.toLowerCase()) {
-                case 'w': moveState.forward = true; break;
-                case 's': moveState.backward = true; break;
-                case 'a': moveState.left = true; break;
-                case 'd': moveState.right = true; break;
-                case ' ': moveState.up = true; e.preventDefault(); break;
-                case 'shift': moveState.down = true; break;
+                case 'w': moveState.forward = true; e.preventDefault(); break;
+                case 's': moveState.backward = true; e.preventDefault(); break;
+                case 'a': moveState.left = true; e.preventDefault(); break;
+                case 'd': moveState.right = true; e.preventDefault(); break;
+                case ' ': moveState.jump = true; e.preventDefault(); break;
             }
         });
         window.addEventListener('keyup', (e) => {
             switch(e.key.toLowerCase()) {
-                case 'w': moveState.forward = false; break;
-                case 's': moveState.backward = false; break;
-                case 'a': moveState.left = false; break;
-                case 'd': moveState.right = false; break;
-                case ' ': moveState.up = false; break;
-                case 'shift': moveState.down = false; break;
+                case 'w': moveState.forward = false; e.preventDefault(); break;
+                case 's': moveState.backward = false; e.preventDefault(); break;
+                case 'a': moveState.left = false; e.preventDefault(); break;
+                case 'd': moveState.right = false; e.preventDefault(); break;
+                case ' ': moveState.jump = false; e.preventDefault(); break;
             }
         });
 
-        // ESP drawing
+        // ESP Canvas
         function drawESP() {
             ctxEsp.clearRect(0,0,espCanvas.width, espCanvas.height);
-            if (!espActive || !enemy) return;
-            const pos = enemy.position.clone();
+            if (!espActive) return;
+            const pos = enemyGroup.position.clone();
             const vector = pos.project(camera);
-            vector.x = (vector.x + 1) / 2 * espCanvas.width;
-            vector.y = (-vector.y + 1) / 2 * espCanvas.height;
             if (vector.z < 1) {
+                const x = (vector.x + 1)/2 * espCanvas.width;
+                const y = (-vector.y + 1)/2 * espCanvas.height;
                 ctxEsp.strokeStyle = '#ff4444';
                 ctxEsp.lineWidth = 2;
-                const size = 60;
-                ctxEsp.strokeRect(vector.x - size/2, vector.y - size, size, size*2);
+                ctxEsp.strokeRect(x-30, y-50, 60, 100);
                 ctxEsp.fillStyle = '#ff4444';
                 ctxEsp.font = '12px Inter';
-                ctxEsp.fillText('Enemy', vector.x-20, vector.y - size - 5);
+                ctxEsp.fillText('Enemy', x-20, y-60);
             }
         }
 
-        // Update loop
+        // Game loop
         function update() {
             if (paused || !controls.isLocked) return;
-            // Movement
             const speed = 0.12;
-            const flySpeed = 0.15;
-            const direction = new THREE.Vector3();
             const forward = new THREE.Vector3(0,0,-1).applyQuaternion(camera.quaternion);
             forward.y = 0; forward.normalize();
             const right = new THREE.Vector3(1,0,0).applyQuaternion(camera.quaternion);
             right.y = 0; right.normalize();
 
-            if (moveState.forward) direction.add(forward);
-            if (moveState.backward) direction.sub(forward);
-            if (moveState.right) direction.add(right);
-            if (moveState.left) direction.sub(right);
-            if (direction.length() > 0) direction.normalize();
+            const moveDir = new THREE.Vector3();
+            if (moveState.forward) moveDir.add(forward);
+            if (moveState.backward) moveDir.sub(forward);
+            if (moveState.right) moveDir.add(right);
+            if (moveState.left) moveDir.sub(right);
+            if (moveDir.length() > 0) moveDir.normalize();
 
-            const moveSpeed = flyActive ? flySpeed : speed;
-            const newPos = camera.position.clone().add(direction.multiplyScalar(moveSpeed));
+            const newPos = camera.position.clone().add(moveDir.multiplyScalar(speed));
             if (flyActive) {
-                if (moveState.up) newPos.y += flySpeed;
-                if (moveState.down) newPos.y -= flySpeed;
+                if (moveState.jump) newPos.y += speed;
+                // descend with shift? not implemented
             } else {
-                // Gravity and jump
-                if (moveState.up && Math.abs(camera.position.y - 1.6) < 0.1) {
-                    // Jump
-                }
-                // Keep on ground
                 newPos.y = 1.6;
             }
-            // Boundary
             if (Math.abs(newPos.x) < 24 && Math.abs(newPos.z) < 24) {
                 camera.position.copy(newPos);
             }
-
             drawESP();
         }
 
@@ -490,28 +545,18 @@
             renderer.render(scene, camera);
         }
 
-        // Resize
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = window.innerWidth/window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
             espCanvas.width = window.innerWidth;
             espCanvas.height = window.innerHeight;
         });
-
-        // Initial setup
         espCanvas.width = window.innerWidth;
         espCanvas.height = window.innerHeight;
-        // Add ammo display element
-        const ammoDiv = document.createElement('div');
-        ammoDiv.id = 'ammoCount';
-        ammoDiv.style.cssText = 'position:absolute; bottom:30px; right:30px; color:white; font-weight:600; font-size:1.2rem; text-shadow:0 0 10px black;';
-        document.getElementById('ui').appendChild(ammoDiv);
-        ammoDiv.textContent = `${weapons[currentWeaponIndex].currentAmmo}/${weapons[currentWeaponIndex].reserve}`;
 
-        // Start
+        updateHUD();
         animate();
-        updateWeaponUI();
     </script>
 </body>
 </html>
