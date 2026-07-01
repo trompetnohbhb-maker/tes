@@ -3,422 +3,479 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YUTA HUB - Roblox</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <title>YUTA FPS</title>
     <style>
         :root {
-            --bg-primary: #05050f;
-            --bg-secondary: #0a0a18;
-            --bg-card: rgba(16, 16, 30, 0.7);
-            --border-card: rgba(255, 255, 255, 0.07);
-            --text-primary: #f0f0f8;
-            --text-secondary: #b0b0c8;
-            --text-muted: #707088;
+            --bg: #05050f;
+            --card: rgba(20, 20, 40, 0.85);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e0e0f0;
             --accent: #a855f7;
-            --accent-glow: rgba(168, 85, 247, 0.4);
-            --green: #34d399;
-            --green-glow: rgba(52, 211, 153, 0.3);
-            --radius-lg: 20px;
-            --radius-md: 12px;
-            --radius-sm: 8px;
-            --transition: 0.2s ease;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow-x: hidden;
-            position: relative;
+            background: var(--bg);
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow: hidden;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
-
-        .bg-orb {
+        #gameCanvas {
+            display: block;
             position: fixed;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.3;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            outline: none;
+        }
+        #ui {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            z-index: 0;
+            z-index: 10;
         }
-        .bg-orb-1 {
-            width: 400px;
-            height: 400px;
-            background: #7c3aed;
-            top: -10%;
-            left: -5%;
-            animation: float 14s infinite alternate;
+        .health-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            width: 200px;
+            height: 14px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 7px;
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow: hidden;
         }
-        .bg-orb-2 {
-            width: 350px;
-            height: 350px;
-            background: #2563eb;
-            bottom: -8%;
-            right: -5%;
-            animation: float 16s infinite alternate-reverse;
+        .health-fill {
+            height: 100%;
+            width: 100%;
+            background: #ff4d6d;
+            transition: width 0.3s;
         }
-        .bg-orb-3 {
-            width: 300px;
-            height: 300px;
-            background: #db2777;
+        .score {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+        .ammo {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+        .crosshair {
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            animation: float 18s infinite alternate;
-            animation-delay: -5s;
+            width: 20px;
+            height: 20px;
         }
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, -30px) scale(1.1); }
-        }
-
-        .main-container {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            max-width: 650px;
-            margin: 20px;
-        }
-
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(35px);
-            -webkit-backdrop-filter: blur(35px);
-            border: 1px solid var(--border-card);
-            border-radius: var(--radius-lg);
-            padding: 32px 28px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card::before {
+        .crosshair::before, .crosshair::after {
             content: '';
             position: absolute;
+            background: rgba(255,255,255,0.8);
+        }
+        .crosshair::before {
+            width: 2px;
+            height: 20px;
+            left: 9px;
             top: 0;
+        }
+        .crosshair::after {
+            width: 20px;
+            height: 2px;
             left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            top: 9px;
         }
-
-        .card-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .card-title {
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
             font-size: 2rem;
             font-weight: 800;
-            letter-spacing: -0.02em;
-            background: linear-gradient(to right, #e0e0ff, #c0b0ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 6px;
-        }
-
-        .card-subtitle {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .games-section {
-            margin-bottom: 28px;
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 12px;
-        }
-
-        .game-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-sm);
-            padding: 16px 14px;
             text-align: center;
-            transition: all var(--transition);
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            user-select: none;
-            outline: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            letter-spacing: 0.01em;
-            position: relative;
+            text-shadow: 0 0 20px black;
+            pointer-events: none;
         }
-
-        .game-card:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(168, 85, 247, 0.5);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
-            color: #ffffff;
-        }
-
-        .game-card:focus-visible {
-            border-color: rgba(168, 85, 247, 0.8);
-            box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.5);
-        }
-
-        .script-wrapper {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .script-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-        }
-
-        .dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-        }
-        .dot.red { background: #ff5f57; }
-        .dot.yellow { background: #febc2e; }
-        .dot.green { background: #28c840; }
-        .script-filename {
-            margin-left: 6px;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.03em;
-        }
-
-        .script-content {
-            padding: 14px 16px;
-            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        .controls-hint {
+            position: absolute;
+            bottom: 60px;
+            left: 30px;
+            color: rgba(255,255,255,0.6);
             font-size: 0.8rem;
-            line-height: 1.6;
-            color: #c8c8d8;
-            max-height: 200px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-all;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255,255,255,0.1) transparent;
-        }
-        .script-content::-webkit-scrollbar {
-            width: 4px;
-        }
-        .script-content::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.15);
-            border-radius: 10px;
-        }
-
-        .btn-copy {
-            width: 100%;
-            padding: 14px 20px;
-            border: none;
-            border-radius: var(--radius-sm);
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all var(--transition);
-            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-copy:hover {
-            background: linear-gradient(135deg, #9d6fff, #8b5cf6);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.6), 0 0 50px rgba(168, 85, 247, 0.3);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .btn-copy:active {
-            transform: scale(0.97);
-            transition: 0.1s;
-        }
-
-        .btn-copy.copied {
-            background: linear-gradient(135deg, #34d399, #10b981);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
-            border-color: rgba(52, 211, 153, 0.5);
-        }
-
-        @media (max-width: 500px) {
-            .glass-card {
-                padding: 24px 16px;
-            }
-            .games-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .game-card {
-                font-size: 0.8rem;
-                padding: 14px 10px;
-            }
-            .card-title {
-                font-size: 1.6rem;
-            }
         }
     </style>
 </head>
 <body>
-
-    <div class="bg-orb bg-orb-1"></div>
-    <div class="bg-orb bg-orb-2"></div>
-    <div class="bg-orb bg-orb-3"></div>
-
-    <div class="main-container">
-        <div class="glass-card">
-
-            <div class="card-header">
-                <h1 class="card-title">YUTA HUB</h1>
-                <p class="card-subtitle">Supported Games</p>
-            </div>
-
-            <div class="games-section">
-                <div class="games-grid" id="gamesGrid"></div>
-            </div>
-
-            <div class="script-wrapper">
-                <div class="script-header">
-                    <span class="dot red"></span>
-                    <span class="dot yellow"></span>
-                    <span class="dot green"></span>
-                    <span class="script-filename">script.lua</span>
-                </div>
-                <div class="script-content" id="scriptDisplay"></div>
-            </div>
-
-            <button class="btn-copy" id="btnCopy">
-                <span>📋</span> Copy Script
-            </button>
-
+    <div id="ui">
+        <div class="score">Score: <span id="scoreValue">0</span></div>
+        <div class="ammo">🔫 <span id="ammoValue">30</span></div>
+        <div class="health-bar">
+            <div class="health-fill" id="healthFill"></div>
         </div>
+        <div class="crosshair"></div>
+        <div class="message" id="message"></div>
+        <div class="controls-hint">WASD: Move | Mouse: Look | Click: Shoot | R: Reload</div>
     </div>
+    <canvas id="gameCanvas"></canvas>
 
-    <div id="toast" style="position:fixed; top:20px; right:20px; z-index:9999; background:rgba(20,20,35,0.9); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:12px 20px; color:white; font-family:Inter,sans-serif; font-size:0.9rem; display:flex; align-items:center; gap:8px; box-shadow:0 10px 25px rgba(0,0,0,0.5); transform:translateX(120%); opacity:0; transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events:none;">
-        <span id="toastIcon">✅</span>
-        <span id="toastMsg">Copied!</span>
-    </div>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
 
-    <script>
-        (function() {
-            const games = [
-                { name: "INSIDE BRAINROT HEAD", url: "https://www.roblox.com/share?code=07da722e7305f44fada54bc86eef4fe7&type=ExperienceDetails&stamp=1781367257830" },
-                { name: "THROW A LUCKY BLOCK", url: "https://www.roblox.com/share?code=0118aec39fff1c4f8c2e916ec6616f50&type=ExperienceDetails&stamp=1782117840684" },
-                { name: "BECOME A BRAINROT", url: "https://www.roblox.com/share?code=0d96a7a9ed6481459b03ea1af254fca0&type=ExperienceDetails&stamp=1781367096165" },
-                { name: "CLIMB FOR LUCKY BLOCK", url: "https://www.roblox.com/share?code=5a95f6e893064c46bd5c151a2c78f3c3&type=ExperienceDetails&stamp=1781366964789" },
-                { name: "BE A LUCKY BLOCK FOR ANIME", url: "https://www.roblox.com/share?code=9aa06001935e7342ade852fcaa120a30&type=ExperienceDetails&stamp=1781809050942" }
-            ];
+    <script type="module">
+        import * as THREE from 'three';
+        import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
-            const scriptText = `loadstring(game:HttpGet("https://raw.githubusercontent.com/trompetnohbhb-maker/isnide/refs/heads/main/sad"))()`;
+        // DOM elements
+        const canvas = document.getElementById('gameCanvas');
+        const scoreElement = document.getElementById('scoreValue');
+        const ammoElement = document.getElementById('ammoValue');
+        const healthFill = document.getElementById('healthFill');
+        const messageElement = document.getElementById('message');
 
-            const gamesGrid = document.getElementById('gamesGrid');
-            games.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.textContent = game.name;
-                card.setAttribute('tabindex', '0');
-                card.setAttribute('role', 'button');
-                card.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    window.open(game.url, '_blank', 'noopener');
-                });
-                card.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        window.open(game.url, '_blank', 'noopener');
-                    }
-                });
-                gamesGrid.appendChild(card);
+        // Game state
+        let score = 0;
+        let health = 100;
+        let maxHealth = 100;
+        let ammo = 30;
+        let maxAmmo = 30;
+        let gameOver = false;
+        let enemies = [];
+        let bullets = [];
+        const enemySpeed = 0.08;
+        const enemyDamage = 10;
+        const bulletSpeed = 2;
+        const shootCooldown = 200; // ms
+        let canShoot = true;
+
+        // Three.js setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x111122);
+        scene.fog = new THREE.Fog(0x111122, 20, 80);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 1.6, 5);
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        // Controls
+        const controls = new PointerLockControls(camera, document.body);
+        
+        canvas.addEventListener('click', () => {
+            if (!gameOver && !controls.isLocked) {
+                controls.lock();
+            }
+        });
+
+        controls.addEventListener('lock', () => {
+            messageElement.textContent = '';
+        });
+
+        controls.addEventListener('unlock', () => {
+            if (!gameOver) {
+                messageElement.textContent = 'Click to play';
+            }
+        });
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404060, 0.5);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(10, 20, 5);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 1024;
+        dirLight.shadow.mapSize.height = 1024;
+        dirLight.shadow.camera.near = 0.5;
+        dirLight.shadow.camera.far = 50;
+        dirLight.shadow.camera.left = -20;
+        dirLight.shadow.camera.right = 20;
+        dirLight.shadow.camera.top = 20;
+        dirLight.shadow.camera.bottom = -20;
+        scene.add(dirLight);
+        const fillLight = new THREE.DirectionalLight(0x4466aa, 0.3);
+        fillLight.position.set(-5, 0, 5);
+        scene.add(fillLight);
+
+        // Ground
+        const groundGeometry = new THREE.PlaneGeometry(60, 60);
+        const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a2e, roughness: 0.8 });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // Grid lines on ground
+        const gridHelper = new THREE.GridHelper(60, 40, 0x333355, 0x222244);
+        scene.add(gridHelper);
+
+        // Some buildings/obstacles
+        function createBuilding(x, z, w, d, h, color) {
+            const geometry = new THREE.BoxGeometry(w, h, d);
+            const material = new THREE.MeshStandardMaterial({ color, roughness: 0.6 });
+            const building = new THREE.Mesh(geometry, material);
+            building.position.set(x, h/2, z);
+            building.castShadow = true;
+            building.receiveShadow = true;
+            scene.add(building);
+            return building;
+        }
+
+        createBuilding(-8, -8, 3, 3, 4, 0x445566);
+        createBuilding(8, -8, 3, 3, 5, 0x556644);
+        createBuilding(-8, 8, 4, 4, 3, 0x665544);
+        createBuilding(8, 8, 2, 2, 6, 0x445544);
+        createBuilding(0, -12, 2, 4, 4, 0x554466);
+        createBuilding(-12, 0, 3, 2, 5, 0x664455);
+        createBuilding(12, 0, 2, 3, 4, 0x446655);
+        createBuilding(0, 12, 3, 3, 3, 0x556655);
+
+        // Enemy creation
+        function createEnemy() {
+            const geometry = new THREE.SphereGeometry(0.5, 8, 8);
+            const material = new THREE.MeshStandardMaterial({ color: 0xff4444, roughness: 0.3 });
+            const enemy = new THREE.Mesh(geometry, material);
+            enemy.castShadow = true;
+            enemy.receiveShadow = true;
+            
+            // Random position on ground
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 8 + Math.random() * 8;
+            const x = Math.cos(angle) * distance;
+            const z = Math.sin(angle) * distance;
+            enemy.position.set(x, 0.5, z);
+            
+            // Add eyes
+            const eyeGeom = new THREE.SphereGeometry(0.1, 4, 4);
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            const leftEye = new THREE.Mesh(eyeGeom, eyeMat);
+            const rightEye = new THREE.Mesh(eyeGeom, eyeMat);
+            leftEye.position.set(-0.15, 0.15, 0.4);
+            rightEye.position.set(0.15, 0.15, 0.4);
+            enemy.add(leftEye);
+            enemy.add(rightEye);
+            
+            scene.add(enemy);
+            enemies.push({
+                mesh: enemy,
+                health: 3,
+                speed: enemySpeed + Math.random() * 0.03,
             });
+        }
 
-            document.getElementById('scriptDisplay').textContent = scriptText;
+        // Bullet creation
+        function shoot() {
+            if (ammo <= 0 || !canShoot || gameOver) return;
+            ammo--;
+            ammoElement.textContent = ammo;
+            canShoot = false;
+            setTimeout(() => { canShoot = true; }, shootCooldown);
 
-            const btnCopy = document.getElementById('btnCopy');
-            const toast = document.getElementById('toast');
-            const toastIcon = document.getElementById('toastIcon');
-            const toastMsg = document.getElementById('toastMsg');
-            let toastTimer;
+            const bulletGeom = new THREE.SphereGeometry(0.05, 4, 4);
+            const bulletMat = new THREE.MeshBasicMaterial({ color: 0xffdd57 });
+            const bullet = new THREE.Mesh(bulletGeom, bulletMat);
+            bullet.position.copy(camera.position);
+            bullet.position.y -= 0.1;
+            
+            const direction = new THREE.Vector3(0, 0, -1);
+            direction.applyQuaternion(camera.quaternion);
+            direction.normalize();
+            
+            bullet.userData = {
+                velocity: direction.multiplyScalar(bulletSpeed),
+                life: 3, // seconds
+            };
+            
+            scene.add(bullet);
+            bullets.push(bullet);
+        }
 
-            function showToast(icon, msg) {
-                if (toastTimer) clearTimeout(toastTimer);
-                toastIcon.textContent = icon;
-                toastMsg.textContent = msg;
-                toast.style.transform = 'translateX(0)';
-                toast.style.opacity = '1';
-                toastTimer = setTimeout(() => {
-                    toast.style.transform = 'translateX(120%)';
-                    toast.style.opacity = '0';
-                }, 2500);
+        // Reload
+        function reload() {
+            if (ammo === maxAmmo || gameOver) return;
+            ammo = maxAmmo;
+            ammoElement.textContent = ammo;
+        }
+
+        // Keyboard input
+        const keys = { w: false, a: false, s: false, d: false };
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'r' || e.key === 'R') reload();
+            if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = false;
+        });
+        window.addEventListener('mousedown', (e) => {
+            if (e.button === 0 && controls.isLocked && !gameOver) {
+                shoot();
+            }
+        });
+
+        // Game loop
+        function update() {
+            if (gameOver) return;
+            
+            // Player movement
+            if (controls.isLocked) {
+                const speed = 0.12;
+                const moveX = (keys.d ? 1 : 0) - (keys.a ? 1 : 0);
+                const moveZ = (keys.s ? 1 : 0) - (keys.w ? 1 : 0);
+                if (moveX !== 0 || moveZ !== 0) {
+                    const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+                    forward.y = 0;
+                    forward.normalize();
+                    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+                    right.y = 0;
+                    right.normalize();
+                    
+                    const direction = new THREE.Vector3();
+                    direction.addScaledVector(forward, -moveZ);
+                    direction.addScaledVector(right, moveX);
+                    direction.normalize();
+                    
+                    const newPos = camera.position.clone().add(direction.multiplyScalar(speed));
+                    // Boundary check
+                    if (Math.abs(newPos.x) < 30 && Math.abs(newPos.z) < 30) {
+                        camera.position.copy(newPos);
+                    }
+                }
             }
 
-            btnCopy.addEventListener('click', async () => {
-                try {
-                    await navigator.clipboard.writeText(scriptText);
-                    btnCopy.classList.add('copied');
-                    const orig = btnCopy.innerHTML;
-                    btnCopy.innerHTML = '<span>✅</span> Copied!';
-                    showToast('✅', 'Copied!');
-                    setTimeout(() => {
-                        btnCopy.classList.remove('copied');
-                        btnCopy.innerHTML = orig;
-                    }, 2000);
-                } catch (err) {
-                    const ta = document.createElement('textarea');
-                    ta.value = scriptText;
-                    ta.style.position = 'fixed';
-                    ta.style.opacity = '0';
-                    document.body.appendChild(ta);
-                    ta.select();
-                    try {
-                        document.execCommand('copy');
-                        showToast('✅', 'Copied!');
-                    } catch (e) {
-                        showToast('❌', 'Copy failed');
+            // Update bullets
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                const bullet = bullets[i];
+                bullet.position.add(bullet.userData.velocity);
+                bullet.userData.life -= 0.016;
+                
+                // Check collision with enemies
+                let bulletHit = false;
+                for (let j = enemies.length - 1; j >= 0; j--) {
+                    const enemy = enemies[j];
+                    const dist = bullet.position.distanceTo(enemy.mesh.position);
+                    if (dist < 0.7) {
+                        enemy.health--;
+                        bulletHit = true;
+                        if (enemy.health <= 0) {
+                            scene.remove(enemy.mesh);
+                            enemies.splice(j, 1);
+                            score += 10;
+                            scoreElement.textContent = score;
+                        }
+                        break;
                     }
-                    document.body.removeChild(ta);
                 }
-            });
+                
+                if (bulletHit || bullet.userData.life <= 0) {
+                    scene.remove(bullet);
+                    bullets.splice(i, 1);
+                }
+            }
 
-            document.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
-                    e.preventDefault();
-                    btnCopy.click();
+            // Update enemies
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                const enemy = enemies[i];
+                // Move toward player
+                const direction = new THREE.Vector3();
+                direction.copy(camera.position).sub(enemy.mesh.position);
+                direction.y = 0;
+                const distanceToPlayer = direction.length();
+                direction.normalize();
+                enemy.mesh.position.add(direction.multiplyScalar(enemy.speed));
+                
+                // Look at player
+                enemy.mesh.lookAt(camera.position.x, enemy.mesh.position.y, camera.position.z);
+                
+                // Damage player if close
+                if (distanceToPlayer < 1.2) {
+                    health -= enemyDamage * 0.02;
+                    healthFill.style.width = Math.max(0, health) + '%';
+                    if (health <= 0) {
+                        health = 0;
+                        gameOver = true;
+                        messageElement.textContent = 'GAME OVER\nClick to restart';
+                        controls.unlock();
+                    }
                 }
-            });
-        })();
+            }
+
+            // Spawn enemies periodically
+            if (enemies.length < 8 && Math.random() < 0.02) {
+                createEnemy();
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            update();
+            renderer.render(scene, camera);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Start with some enemies
+        for (let i = 0; i < 4; i++) {
+            createEnemy();
+        }
+
+        // Initial message
+        messageElement.textContent = 'Click to play';
+        ammoElement.textContent = ammo;
+        scoreElement.textContent = score;
+        healthFill.style.width = '100%';
+
+        // Restart functionality
+        canvas.addEventListener('dblclick', () => {
+            if (gameOver) {
+                // Reset game
+                score = 0;
+                health = maxHealth;
+                ammo = maxAmmo;
+                gameOver = false;
+                scoreElement.textContent = score;
+                ammoElement.textContent = ammo;
+                healthFill.style.width = '100%';
+                messageElement.textContent = '';
+                // Remove all enemies and bullets
+                enemies.forEach(e => scene.remove(e.mesh));
+                enemies = [];
+                bullets.forEach(b => scene.remove(b));
+                bullets = [];
+                // Spawn new enemies
+                for (let i = 0; i < 4; i++) createEnemy();
+                camera.position.set(0, 1.6, 5);
+                controls.lock();
+            }
+        });
+
+        animate();
     </script>
 </body>
 </html>
