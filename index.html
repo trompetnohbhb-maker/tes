@@ -378,7 +378,8 @@
 
     <script>
         (function() {
-            // ============ GAME DATA (5 Roblox games with map links) ============
+            // ============ GAME DATA (5 Roblox games dengan link map) ============
+            // Ganti link di sini sesuai keinginanmu
             const games = [
                 {
                     name: "INSIDE BRAINROT HEAD",
@@ -407,11 +408,11 @@
                 }
             ];
 
-            // ============ SCRIPT TO COPY ============
-            const scriptToCopy = loadstring(game:HttpGet("https://raw.githubusercontent.com/trompetnohbhb-maker/isnide/refs/heads/main/sad"))()
-  
+            // ============ SCRIPT YANG AKAN DI-COPY ============
+            // Ini script kamu, langsung loadstring dari GitHub
+            const scriptToCopy = `loadstring(game:HttpGet("https://raw.githubusercontent.com/trompetnohbhb-maker/isnide/refs/heads/main/sad"))()`;
 
-            // ============ RENDER GAME CARDS dengan event listener yang pasti ============
+            // ============ RENDER GAME CARDS ============
             const gamesGrid = document.getElementById('gamesGrid');
             games.forEach(game => {
                 const card = document.createElement('div');
@@ -427,13 +428,13 @@
                     </span>
                 `;
 
-                // Event click untuk membuka link
+                // Klik untuk membuka link game
                 card.addEventListener('click', function(e) {
                     e.stopPropagation();
                     window.open(game.url, '_blank', 'noopener');
                 });
 
-                // Keyboard accessibility (Enter atau Space)
+                // Keyboard aksesibilitas
                 card.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -444,11 +445,11 @@
                 gamesGrid.appendChild(card);
             });
 
-            // ============ DISPLAY SCRIPT ============
+            // ============ TAMPILKAN SCRIPT ============
             const scriptDisplay = document.getElementById('scriptDisplay');
             scriptDisplay.textContent = scriptToCopy;
 
-            // ============ COPY FUNCTIONALITY ============
+            // ============ FUNGSI COPY ============
             const btnCopy = document.getElementById('btnCopy');
             const toast = document.getElementById('toast');
             const toastIcon = document.getElementById('toastIcon');
@@ -499,7 +500,7 @@
                 }
             });
 
-            // Keyboard shortcut: Ctrl+Shift+C to copy
+            // Shortcut keyboard
             document.addEventListener('keydown', (e) => {
                 if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
                     e.preventDefault();
