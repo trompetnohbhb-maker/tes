@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Script Hub - Roblox Games</title>
+    <title>YUTA HUB - Roblox</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,7 +46,6 @@
             position: relative;
         }
 
-        /* Animated background */
         .bg-orb {
             position: fixed;
             border-radius: 50%;
@@ -121,45 +120,30 @@
             margin-bottom: 32px;
         }
 
-        .icon-wrap {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: rgba(168, 85, 247, 0.15);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            margin-bottom: 12px;
-            font-size: 24px;
-            box-shadow: 0 0 25px var(--accent-glow);
-        }
-
         .card-title {
-            font-size: 1.7rem;
+            font-size: 2rem;
             font-weight: 800;
             letter-spacing: -0.02em;
             background: linear-gradient(to right, #e0e0ff, #c0b0ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .card-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
             font-weight: 400;
         }
 
-        /* Games grid */
         .games-section {
             margin-bottom: 28px;
         }
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 12px;
         }
 
@@ -167,19 +151,20 @@
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: var(--radius-sm);
-            padding: 14px 12px;
+            padding: 16px 14px;
             text-align: center;
             transition: all var(--transition);
             color: var(--text-primary);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
             user-select: none;
             outline: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.01em;
+            position: relative;
         }
 
         .game-card:hover {
@@ -187,6 +172,7 @@
             border-color: rgba(168, 85, 247, 0.5);
             transform: translateY(-4px);
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+            color: #ffffff;
         }
 
         .game-card:focus-visible {
@@ -194,28 +180,6 @@
             box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.5);
         }
 
-        .game-icon {
-            font-size: 2rem;
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
-        }
-
-        .game-name {
-            font-weight: 600;
-            font-size: 0.85rem;
-            line-height: 1.2;
-            color: #e0d0ff;
-        }
-
-        .game-link-hint {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            opacity: 0.7;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Copy script section */
         .script-wrapper {
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -252,10 +216,10 @@
         .script-content {
             padding: 14px 16px;
             font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 0.78rem;
-            line-height: 1.65;
+            font-size: 0.8rem;
+            line-height: 1.6;
             color: #c8c8d8;
-            max-height: 240px;
+            max-height: 200px;
             overflow-y: auto;
             white-space: pre-wrap;
             word-break: break-all;
@@ -270,7 +234,6 @@
             border-radius: 10px;
         }
 
-        /* Copy button */
         .btn-copy {
             width: 100%;
             padding: 14px 20px;
@@ -286,7 +249,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             transition: all var(--transition);
             box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -312,7 +275,6 @@
             border-color: rgba(52, 211, 153, 0.5);
         }
 
-        /* Responsive */
         @media (max-width: 500px) {
             .glass-card {
                 padding: 24px 16px;
@@ -320,49 +282,44 @@
             .games-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            .game-name {
+            .game-card {
                 font-size: 0.8rem;
+                padding: 14px 10px;
+            }
+            .card-title {
+                font-size: 1.6rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Background orbs -->
     <div class="bg-orb bg-orb-1"></div>
     <div class="bg-orb bg-orb-2"></div>
     <div class="bg-orb bg-orb-3"></div>
 
-    <!-- Main UI -->
     <div class="main-container">
         <div class="glass-card">
 
-            <!-- Header -->
             <div class="card-header">
-                <div class="icon-wrap">🎮</div>
-                <h1 class="card-title">Script Hub</h1>
-                <p class="card-subtitle">Supported Roblox Games</p>
+                <h1 class="card-title">YUTA HUB</h1>
+                <p class="card-subtitle">Supported Games</p>
             </div>
 
-            <!-- Game list (5 games) -->
             <div class="games-section">
-                <div class="games-grid" id="gamesGrid">
-                    <!-- Game cards generated by JavaScript -->
-                </div>
+                <div class="games-grid" id="gamesGrid"></div>
             </div>
 
-            <!-- Script display -->
             <div class="script-wrapper">
                 <div class="script-header">
                     <span class="dot red"></span>
                     <span class="dot yellow"></span>
                     <span class="dot green"></span>
-                    <span class="script-filename">main_script.lua</span>
+                    <span class="script-filename">script.lua</span>
                 </div>
-                <div class="script-content" id="scriptDisplay">-- Loading script...</div>
+                <div class="script-content" id="scriptDisplay"></div>
             </div>
 
-            <!-- Copy button -->
             <button class="btn-copy" id="btnCopy">
                 <span>📋</span> Copy Script
             </button>
@@ -370,146 +327,97 @@
         </div>
     </div>
 
-    <!-- Toast notification -->
     <div id="toast" style="position:fixed; top:20px; right:20px; z-index:9999; background:rgba(20,20,35,0.9); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:12px 20px; color:white; font-family:Inter,sans-serif; font-size:0.9rem; display:flex; align-items:center; gap:8px; box-shadow:0 10px 25px rgba(0,0,0,0.5); transform:translateX(120%); opacity:0; transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events:none;">
         <span id="toastIcon">✅</span>
-        <span id="toastMsg">Berhasil disalin!</span>
+        <span id="toastMsg">Copied!</span>
     </div>
 
     <script>
         (function() {
-            // ============ GAME DATA (5 Roblox games dengan link map) ============
-            // Ganti link di sini sesuai keinginanmu
             const games = [
-                {
-                    name: "INSIDE BRAINROT HEAD",
-                    icon: "🧠",
-                    url: "https://www.roblox.com/share?code=07da722e7305f44fada54bc86eef4fe7&type=ExperienceDetails&stamp=1781367257830"
-                },
-                {
-                    name: "THROW A LUCKY BLOCK",
-                    icon: "🎲",
-                    url: "https://www.roblox.com/share?code=0118aec39fff1c4f8c2e916ec6616f50&type=ExperienceDetails&stamp=1782117840684"
-                },
-                {
-                    name: "BECOME A BRAINROT",
-                    icon: "🤪",
-                    url: "https://www.roblox.com/share?code=0d96a7a9ed6481459b03ea1af254fca0&type=ExperienceDetails&stamp=1781367096165"
-                },
-                {
-                    name: "CLIMB FOR LUCKY BLOCK",
-                    icon: "🧗",
-                    url: "https://www.roblox.com/share?code=5a95f6e893064c46bd5c151a2c78f3c3&type=ExperienceDetails&stamp=1781366964789"
-                },
-                {
-                    name: "BE A LUCKY BLOCK FOR ANIME",
-                    icon: "🍀",
-                    url: "https://www.roblox.com/share?code=9aa06001935e7342ade852fcaa120a30&type=ExperienceDetails&stamp=1781809050942"
-                }
+                { name: "INSIDE BRAINROT HEAD", url: "https://www.roblox.com/share?code=07da722e7305f44fada54bc86eef4fe7&type=ExperienceDetails&stamp=1781367257830" },
+                { name: "THROW A LUCKY BLOCK", url: "https://www.roblox.com/share?code=0118aec39fff1c4f8c2e916ec6616f50&type=ExperienceDetails&stamp=1782117840684" },
+                { name: "BECOME A BRAINROT", url: "https://www.roblox.com/share?code=0d96a7a9ed6481459b03ea1af254fca0&type=ExperienceDetails&stamp=1781367096165" },
+                { name: "CLIMB FOR LUCKY BLOCK", url: "https://www.roblox.com/share?code=5a95f6e893064c46bd5c151a2c78f3c3&type=ExperienceDetails&stamp=1781366964789" },
+                { name: "BE A LUCKY BLOCK FOR ANIME", url: "https://www.roblox.com/share?code=9aa06001935e7342ade852fcaa120a30&type=ExperienceDetails&stamp=1781809050942" }
             ];
 
-            // ============ SCRIPT YANG AKAN DI-COPY ============
-            // Ini script kamu, langsung loadstring dari GitHub
-            const scriptToCopy = `loadstring(game:HttpGet("https://raw.githubusercontent.com/trompetnohbhb-maker/isnide/refs/heads/main/sad"))()`;
+            const scriptText = `loadstring(game:HttpGet("https://raw.githubusercontent.com/trompetnohbhb-maker/isnide/refs/heads/main/sad"))()`;
 
-            // ============ RENDER GAME CARDS ============
             const gamesGrid = document.getElementById('gamesGrid');
             games.forEach(game => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
+                card.textContent = game.name;
                 card.setAttribute('tabindex', '0');
                 card.setAttribute('role', 'button');
-                card.setAttribute('aria-label', game.name + ' - Buka di Roblox');
-                card.innerHTML = `
-                    <span class="game-icon">${game.icon}</span>
-                    <span class="game-name">${game.name}</span>
-                    <span class="game-link-hint">
-                        <span>↗</span> Play
-                    </span>
-                `;
-
-                // Klik untuk membuka link game
-                card.addEventListener('click', function(e) {
+                card.addEventListener('click', (e) => {
                     e.stopPropagation();
                     window.open(game.url, '_blank', 'noopener');
                 });
-
-                // Keyboard aksesibilitas
-                card.addEventListener('keydown', function(e) {
+                card.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
                         window.open(game.url, '_blank', 'noopener');
                     }
                 });
-
                 gamesGrid.appendChild(card);
             });
 
-            // ============ TAMPILKAN SCRIPT ============
-            const scriptDisplay = document.getElementById('scriptDisplay');
-            scriptDisplay.textContent = scriptToCopy;
+            document.getElementById('scriptDisplay').textContent = scriptText;
 
-            // ============ FUNGSI COPY ============
             const btnCopy = document.getElementById('btnCopy');
             const toast = document.getElementById('toast');
             const toastIcon = document.getElementById('toastIcon');
             const toastMsg = document.getElementById('toastMsg');
+            let toastTimer;
 
-            let toastTimer = null;
-
-            function showToast(icon, message, duration = 2800) {
+            function showToast(icon, msg) {
                 if (toastTimer) clearTimeout(toastTimer);
                 toastIcon.textContent = icon;
-                toastMsg.textContent = message;
+                toastMsg.textContent = msg;
                 toast.style.transform = 'translateX(0)';
                 toast.style.opacity = '1';
                 toastTimer = setTimeout(() => {
                     toast.style.transform = 'translateX(120%)';
                     toast.style.opacity = '0';
-                }, duration);
+                }, 2500);
             }
 
             btnCopy.addEventListener('click', async () => {
                 try {
-                    await navigator.clipboard.writeText(scriptToCopy);
+                    await navigator.clipboard.writeText(scriptText);
                     btnCopy.classList.add('copied');
-                    const originalHTML = btnCopy.innerHTML;
-                    btnCopy.innerHTML = '<span>✅</span> Tersalin!';
-
-                    showToast('✅', 'Script berhasil disalin!');
-
+                    const orig = btnCopy.innerHTML;
+                    btnCopy.innerHTML = '<span>✅</span> Copied!';
+                    showToast('✅', 'Copied!');
                     setTimeout(() => {
                         btnCopy.classList.remove('copied');
-                        btnCopy.innerHTML = originalHTML;
+                        btnCopy.innerHTML = orig;
                     }, 2000);
                 } catch (err) {
-                    // Fallback
-                    const textarea = document.createElement('textarea');
-                    textarea.value = scriptToCopy;
-                    textarea.style.position = 'fixed';
-                    textarea.style.opacity = '0';
-                    document.body.appendChild(textarea);
-                    textarea.select();
+                    const ta = document.createElement('textarea');
+                    ta.value = scriptText;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
                     try {
                         document.execCommand('copy');
-                        showToast('✅', 'Script disalin (fallback)');
+                        showToast('✅', 'Copied!');
                     } catch (e) {
-                        showToast('❌', 'Gagal menyalin script');
+                        showToast('❌', 'Copy failed');
                     }
-                    document.body.removeChild(textarea);
+                    document.body.removeChild(ta);
                 }
             });
 
-            // Shortcut keyboard
             document.addEventListener('keydown', (e) => {
                 if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
                     e.preventDefault();
                     btnCopy.click();
                 }
             });
-
-            console.log('%c✨ Script Hub Ready %c| %cCtrl+Shift+C = Copy',
-                'color:#a855f7;font-weight:bold;', '', 'color:#34d399;');
         })();
     </script>
 </body>
