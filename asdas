@@ -357,29 +357,51 @@ F.fetchServerList=function()
     end
     return d.data
 end
+
+-- =========================================================
+-- [PATCH #1] F.pickServer — tambah BUFFER = 3 slot kosong
+-- =========================================================
 F.pickServer=function()
     local tried = State.triedServerIds or {}
     local list, why = F.fetchServerList()
     if not list then return nil, why end
+
+    local BUFFER = 3 -- minimal sisa slot biar gak ke-queue ke server penuh
+
+    local function eligible(s)
+        if type(s) ~= "table" or not s.id then return false end
+        if s.id == game.JobId or tried[s.id] then return false end
+        local playing = tonumber(s.playing) or 0
+        local maxP = tonumber(s.maxPlayers) or 0
+        if maxP <= 0 then return false end
+        if (maxP - playing) < BUFFER then return false end
+        return true
+    end
+
     local c = {}
     for _, s in ipairs(list) do
-        if type(s) == "table" and s.id and s.id ~= game.JobId and not tried[s.id]
-            and (tonumber(s.playing) or 0) < (tonumber(s.maxPlayers) or 0) then
-            table.insert(c, s)
-        end
+        if eligible(s) then table.insert(c, s) end
     end
+
+    -- Kalau semua udah kena "tried", reset & coba ulang dengan filter buffer
     if #c == 0 then
         State.triedServerIds = {}
         for _, s in ipairs(list) do
             if type(s) == "table" and s.id and s.id ~= game.JobId
-                and (tonumber(s.playing) or 0) < (tonumber(s.maxPlayers) or 0) then
+                and (tonumber(s.maxPlayers) or 0) - (tonumber(s.playing) or 0) >= BUFFER then
                 table.insert(c, s)
             end
         end
-        if #c == 0 then return nil, "tidak ada kandidat server" end
+        if #c == 0 then return nil, "tidak ada kandidat server (semua sisa slot < " .. BUFFER .. ")" end
     end
+
     return c[math.random(1, #c)]
 end
+
+-- =========================================================
+-- [PATCH #2] F.hopToServer — pakai TeleportOptions
+--            ShouldReserveServer = false → gak di-queue ke server full
+-- =========================================================
 F.hopToServer=function()
     if not Toggles.autoFindWeather then return false end
     local pick, why = F.pickServer()
@@ -399,17 +421,30 @@ F.hopToServer=function()
     F.saveState(st)
     F.queueReload()
     State.teleportPending = true
-    print("[AutoHop] Hop ke " .. pick.id .. " (" .. tostring(pick.playing) .. "/" .. tostring(pick.maxPlayers) .. ")")
+
+    local playing = tonumber(pick.playing) or 0
+    local maxP = tonumber(pick.maxPlayers) or 0
+    print(string.format(
+        "[AutoHop] Hop ke %s (%d/%d, sisa %d slot)",
+        pick.id, playing, maxP, maxP - playing
+    ))
+
     local TS = game:GetService("TeleportService")
+    local opts = Instance.new("TeleportOptions")
+    opts.ShouldReserveServer = false -- ini kuncinya biar gak di-queue kalau ternyata full
+
     local ok, err = pcall(function()
-        TS:TeleportToPlaceInstance(game.PlaceId, pick.id, Players.LocalPlayer)
+        TS:TeleportToPlaceInstance(game.PlaceId, pick.id, Players.LocalPlayer, opts)
     end)
+
     if not ok then
         State.teleportPending = false
         print("[AutoHop] Teleport error: " .. tostring(err))
+        State.triedServerIds[pick.id] = true
     end
     return ok
 end
+
 F.stopWeatherFinderLoop=function()
     Toggles.autoFindWeather=false
     if State.weatherFinderLoop then pcall(task.cancel,State.weatherFinderLoop) State.weatherFinderLoop=nil end
