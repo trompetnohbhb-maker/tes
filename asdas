@@ -1463,6 +1463,13 @@ FuseLeft2:AddButton({Text="Fuse Once",Callback=function()if isDestroyed then ret
 FuseLeft2:AddButton({Text="Refresh Info",Callback=function()F.updateFuseInfo() end})
 eIdx=eIdx+1 F.RegisterUI("targetWeather",ServerLeft1.AddDropdown(ServerLeft1,eIdx,{Text="Target Weather",Values=CFG.WEATHER_LIST,Multi=true,AllowNull=true,Callback=function(v)State.targetWeatherList={} if type(v)=="table" then for k,vv in pairs(v) do if vv==true then table.insert(State.targetWeatherList,k) end if type(k)=="number" and type(vv)=="string" and vv~="" then table.insert(State.targetWeatherList,vv) end end elseif type(v)=="string" and v~="" then table.insert(State.targetWeatherList,v) end end}))
 F.AddPopupButton(UIRegistry.targetWeather)
+if State.weatherFinderResume and type(State.targetWeatherList)=="table" then
+    local restoredTargets={}
+    for _,weatherName in ipairs(State.targetWeatherList) do
+        if type(weatherName)=="string" and weatherName~="" then restoredTargets[weatherName]=true end
+    end
+    pcall(function() UIRegistry.targetWeather:SetValue(restoredTargets) end)
+end
 ServerLeft1:AddButton({Text="Check Current Weather",Callback=function()
     local w=F.getWeatherInfo()
     if w then Library:Notify({Title="Weather",Description="Current: "..w.name.." ("..F.formatDuration(w.remaining)..")",Time=5})
@@ -1471,7 +1478,11 @@ end})
 eIdx=eIdx+1
 UI.hopDelaySlider=ServerLeft1.AddSlider(ServerLeft1,eIdx,{Text="Hop Delay",Default=10,Min=3,Max=60,Suffix="s",Callback=function(v)local n=tonumber(v) if n and n>=1 then State.weatherFinderHopDelay=math.floor(n) F.saveHopDelay(math.floor(n)) end end})
 F.RegisterUI("weatherFinderHopDelay",UI.hopDelaySlider)
-State.hopDelayLabel=ServerLeft1:AddLabel("Hop Delay: 10s")
+local _savedWeatherHopDelay=tonumber(_weatherResumeState.hopDelay) or F.loadHopDelay() or 10
+_savedWeatherHopDelay=math.clamp(math.floor(_savedWeatherHopDelay),3,60)
+State.weatherFinderHopDelay=_savedWeatherHopDelay
+pcall(function() UI.hopDelaySlider:SetValue(_savedWeatherHopDelay) end)
+State.hopDelayLabel=ServerLeft1:AddLabel("Hop Delay: "..tostring(State.weatherFinderHopDelay).."s")
 eIdx=eIdx+1
 State.weatherFinderToggle=ServerLeft1.AddToggle(ServerLeft1,eIdx,{Text="Auto Find Weather",Default=false,Callback=function(s)
     Toggles.autoFindWeather=s
@@ -1573,4 +1584,3 @@ end)
 task.spawn(function()while not isDestroyed do if Dice and DataController then F.refreshDiceDropdown() end task.wait(3) end end)
 task.spawn(function()while not isDestroyed do if DataController then F.updateSlotInfoLabel() end task.wait(2) end end)
 Library:Notify({Title="Anime Dice",Description="Loaded!",Time=5})
-
