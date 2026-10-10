@@ -373,8 +373,6 @@ F.fetchServerList=function()
     end
     return d.data
 end
-
-
 F.pickServer=function()
     local tried = State.triedServerIds or {}
     local list, why = F.fetchServerList()
@@ -397,7 +395,6 @@ F.pickServer=function()
         if eligible(s) then table.insert(c, s) end
     end
 
-
     if #c == 0 then
         State.triedServerIds = {}
         for _, s in ipairs(list) do
@@ -411,8 +408,6 @@ F.pickServer=function()
 
     return c[math.random(1, #c)]
 end
-
-
 F.hopToServer=function()
     if not Toggles.autoFindWeather then return false end
     local pick, why = F.pickServer()
@@ -455,7 +450,6 @@ F.hopToServer=function()
     end
     return ok
 end
-
 F.stopWeatherFinderLoop=function()
     Toggles.autoFindWeather=false
     if State.weatherFinderLoop then pcall(task.cancel,State.weatherFinderLoop) State.weatherFinderLoop=nil end
@@ -463,33 +457,75 @@ F.stopWeatherFinderLoop=function()
 end
 F.startWeatherFinderLoop=function()
     if State.weatherFinderLoop then return end
-    if not State.targetWeatherList or #State.targetWeatherList==0 then Library:Notify({Title="Weather Finder",Description="Pilih target dulu!",Time=3}) Toggles.autoFindWeather=false if State.weatherFinderToggle then State.weatherFinderToggle:SetValue(false) end return end
+    if not State.targetWeatherList or #State.targetWeatherList==0 then
+        Library:Notify({Title="Weather Finder",Description="Pilih target dulu!",Time=3})
+        Toggles.autoFindWeather=false
+        if State.weatherFinderToggle then State.weatherFinderToggle:SetValue(false) end
+        return
+    end
     State.weatherFinderLoop=task.spawn(function()
         local function matchCurrent()
             local cur=F.getCurrentWeatherName()
             if not cur then return false,nil end
-            for _,t in ipairs(State.targetWeatherList) do if cur==t then return true,cur end end
+            for _,t in ipairs(State.targetWeatherList) do
+                if cur==t then return true,cur end
+            end
             return false,cur
         end
+
+        local function stopFinder(foundName)
+            Toggles.autoFindWeather=false
+            if State.weatherFinderToggle then State.weatherFinderToggle:SetValue(false) end
+            if State.weatherFinderStatus then State.weatherFinderStatus:SetText("Found: "..tostring(foundName)) end
+            F.clearState()
+            pcall(function()
+                local fn=F.getQueueFunc()
+                if type(fn)=="function" then fn("") end
+            end)
+            Library:Notify({Title="Weather Finder",Description="Ketemu "..tostring(foundName).."!",Time=5})
+        end
+
         while Toggles.autoFindWeather and not isDestroyed do
-            local matched,cur=matchCurrent()
+            local matched,cur = matchCurrent()
             if matched then
-                if State.weatherFinderStatus then State.weatherFinderStatus:SetText("Found: "..cur) end
-                Toggles.autoFindWeather=false
-                if State.weatherFinderToggle then State.weatherFinderToggle:SetValue(false) end
-                F.clearState()
-                Library:Notify({Title="Weather Finder",Description="Ketemu "..cur.."!",Time=5})
+                stopFinder(cur)
                 break
             end
+
             local wait = F.getHopDelay()
             local elapsed = 0
+            local matchedDuringWait = false
+            local matchedName = nil
+
             while elapsed < wait and Toggles.autoFindWeather and not isDestroyed do
-                task.wait(1) elapsed = elapsed + 1
-                if State.weatherFinderStatus then State.weatherFinderStatus:SetText("Current: "..tostring(F.getCurrentWeatherName() or "None").." | Hop in "..tostring(wait-elapsed).."s") end
-                local m2 = matchCurrent()
-                if m2 then break end
+                task.wait(1)
+                elapsed = elapsed + 1
+                if State.weatherFinderStatus then
+                    State.weatherFinderStatus:SetText(
+                        "Current: "..tostring(F.getCurrentWeatherName() or "None").." | Hop in "..tostring(wait-elapsed).."s"
+                    )
+                end
+                local m2,c2 = matchCurrent()
+                if m2 then
+                    matchedDuringWait = true
+                    matchedName = c2
+                    break
+                end
             end
+
             if not Toggles.autoFindWeather or isDestroyed then break end
+
+            if matchedDuringWait then
+                stopFinder(matchedName)
+                break
+            end
+
+            local m3,c3 = matchCurrent()
+            if m3 then
+                stopFinder(c3)
+                break
+            end
+
             local ok = F.hopToServer()
             if not ok then
                 task.wait(5)
