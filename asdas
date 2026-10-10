@@ -41,7 +41,22 @@ CFG.TOWER_FLOOR_STARTED_WAIT={initial=0.76,transition=0.38,repeated=0}
 CFG.TOWER_CYCLE={"Dragon Tower","Cursed Tower","Pirate Tower","Hidden Leaf Tower","Slayer Tower","Shadow Tower","Infinity Tower"}
 CFG.FUSE_DELAY=4 CFG.GEAR_SLOTS={"Head","Torso","Back","Upper","Waist"}
 CFG.GEAR_BUFF_OPTIONS={"Auto (Best Rarity+Total)","Luck","Money Multiplier","Damage Multiplier","Health Multiplier","Trait Luck","Grade Luck","Walkspeed"}
-CFG.SUFFIX_TABLE={k=1e3,m=1e6,b=1e9,t=1e12,qd=1e15,qi=1e18,sx=1e21,sp=1e24,oc=1e27,no=1e30,dc=1e33,ud=1e36,dd=1e39,td=1e42,qad=1e45,qid=1e48,sxd=1e51,spd=1e54,ocd=1e57,nod=1e60,vi=1e63,vg=1e66,thousand=1e3,million=1e6,billion=1e9,trillion=1e12,quadrillion=1e15,quintillion=1e18,sextillion=1e21,septillion=1e24,octillion=1e27,nonillion=1e30,decillion=1e33,mil=1e6,bil=1e9,tril=1e12,quad=1e15,quin=1e18,sext=1e21,sept=1e24,oct=1e27,non=1e30,dec=1e33,bn=1e9,tn=1e12}
+CFG.SUFFIX_LIST = {
+    {1e87, "ocvg"},{1e84, "spvg"},{1e81, "sxvg"},{1e78, "qivg"},{1e75, "qavg"},
+    {1e72, "tvg"},{1e69, "dvg"},{1e66, "uvg"},{1e63, "vg"},{1e60, "nodc"},
+    {1e57, "ocdc"},{1e54, "spdc"},{1e51, "sxdc"},{1e48, "qidc"},{1e45, "qadc"},
+    {1e42, "tdc"},{1e39, "ddc"},{1e36, "udc"},{1e33, "dc"},{1e30, "no"},
+    {1e27, "oc"},{1e24, "sp"},{1e21, "sx"},{1e18, "qi"},{1e15, "qd"},
+    {1e12, "t"},{1e9, "b"},{1e6, "m"},{1e3, "k"},
+}
+CFG.SUFFIX_TABLE = {}
+for _, entry in ipairs(CFG.SUFFIX_LIST) do
+    CFG.SUFFIX_TABLE[entry[2]] = entry[1]
+end
+CFG.SUFFIX_TABLE.k = 1e3
+CFG.SUFFIX_TABLE.m = 1e6
+CFG.SUFFIX_TABLE.b = 1e9
+CFG.SUFFIX_TABLE.t = 1e12
 CFG.LOADER_URL = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/trompetnohbhb-maker/tes/refs/heads/main/asdas"))()'
 CFG.LOADER_FILE = "YutaHub_Loader.txt"
 CFG.STATE_FILE = CFG.CONFIG_FOLDER.."/state.json"
@@ -66,7 +81,7 @@ F.buildRarityData=function()
 end
 F.buildRarityData()
 local Toggles={webhook=false,autoRoll=false,autoSell=false,autoCollect=false,autoRebirth=false,autoRebirthStats=false,autoUpgrade=false,autoLevelUp=false,autoGift=false,autoGiftUnit=false,autoGrade=false,autoTrait=false,autoClaim=false,autoBuyQuest=false,autoUsePotion=false,equipBest=false,weatherWebhook=false,autoUseSpin=false,antiAfk=true,bruteForce=false,sendPlayerData=false,autoFuse=false,fuseWebhook=true,autoBuyDice=false,autoEquipGear=false,autoFindWeather=false,autoLoadConfig=false}
-local State={isDestroyed=false,isRolling=false,rollDelay=2.5,webhookUrl="",webhookCounters={},webhookRarityFilters={},webhookCounterLabel=nil,sellIncomeThreshold=0,selectedSellRarities={},sellChanceThreshold=0,sellChanceThresholdRaw="",equipBestDelay=1,equipBestLoop=nil,selectedDiceToBuy=nil,diceDropdown=nil,diceInfoLabel=nil,autoSellLoop=nil,autoCollectLoop=nil,autoRebirthLoop=nil,autoRebirthToggle=nil,autoRebirthInfoLabel=nil,autoRebirthTargetLabel=nil,autoRebirthMoneyLabel=nil,autoRebirthStatusLabel=nil,autoRebirthStatsLoop=nil,autoRebirthStatsToggle=nil,autoRebirthStatsInfoLabel=nil,autoRebirthStatsOrder={"Luck","Money","Damage","Trait Luck","Grade Luck","Health"},autoUpgradeLoop=nil,selectedLevelUpSlots={},levelUpLoop=nil,levelUpTarget=100,selectedTradePlayer=nil,tradePlayerDropdown=nil,selectedGiftItem=nil,giftItemDropdown=nil,giftItemMap={},autoGiftLoop=nil,autoGiftToggle=nil,autoGiftUnitLoop=nil,autoGiftUnitToggle=nil,giftUnitMinChance=1e12,giftUnitMaxChance=math.huge,giftUnitMaxIncome=math.huge,selectedRollUnitKeys={},rollUnitDropdown=nil,rollUnitOptionsMap={},gradeTargetDropdown=nil,traitTargetDropdown=nil,autoGradeLoop=nil,autoGradeToggle=nil,autoTraitLoop=nil,autoTraitToggle=nil,gradeInfoLabel=nil,traitInfoLabel=nil,selectedGradeTargets={},selectedTraitTargets={},autoClaimLoop=nil,autoClaimToggle=nil,autoBuyQuestLoop=nil,autoBuyQuestToggle=nil,questShopItems={},selectedShopItem=nil,questShopTicketsLabel=nil,questShopPriceLabel=nil,questShopBuyBtn=nil,slotInfoLabel=nil,slotDropdown=nil,stopAtRebirth=0,fpsBoostRunning=false,fpsBoostLoop=nil,webhookMentionEveryone=false,uiToggleKeybind="",uiEverythingHidden=false,uiMainVisible=true,towerAutoPlay=false,towerLoop=nil,towerStatus="Ready",towerCurrentFloor=0,towerCurrentName="",completeFloorDelay=1.5,playTowerDelay=3,infinityTarget=999999,towerCurrentCycle=0,dragonTarget=100,cursedTarget=100,pirateTarget=100,hiddenLeafTarget=100,slayerTarget=100,shadowTarget=100,autoUsePotion=false,autoUsePotionLoop=nil,selectedPotionCategories={},selectedPotionTowers={},autoUsePotionDelay=2,autoUsePotionThreshold=10,usePotionOnlyOnWeather=false,weatherWebhookLastSent=nil,antiLagActive=false,antiLagConnection=nil,autoUseSpinLoop=nil,selectedSpinTypes={},spinPerEvent=5,spinStopAt=2,spinRequirePotion=true,spinUsedThisEvent={},spinLastEventStart=nil,bruteForceLoopA=nil,bruteForceLoopB=nil,bruteForceToggle=nil,playerDataLoop=nil,playerDataInterval=1,playerDataToggle=nil,playerDataSentCount=0,collectInterval=60,selectedConfig=nil,configName=nil,playerDataCounterLabel=nil,maxPotionTier="IV",fuseMinChance=0,fuseMaxChance=math.huge,fuseMaxIncome=math.huge,fuseMinChanceRaw="",fuseMaxChanceRaw="",fuseMaxIncomeRaw="",autoFuseLoop=nil,autoFuseToggle=nil,fuseInfoLabel=nil,fuseTotalLabel=nil,fuseReadyLabel=nil,fuseTotalCount=0,fuseWebhookSentCount=0,fuseWebhookLabel=nil,fuseWebhookMinIncome=0,fuseWebhookMinIncomeRaw="",fuseWebhookRarityFilter={},autoBuyDiceLoop=nil,autoBuyDiceToggle=nil,autoEquipGearLoop=nil,autoEquipGearToggle=nil,upgradeStatusLabel=nil,upgradeFailCooldown={},selectedGearBuff="Auto (Best Rarity+Total)",maxUnitSlots=32,targetWeatherList={},weatherFinderLoop=nil,weatherFinderToggle=nil,weatherFinderStatus=nil,weatherFinderCurrentLabel=nil,weatherFinderTargetLabel=nil,weatherFinderAttemptsLabel=nil,weatherFinderAttempts=0,weatherFinderHopDelay=10,hopDelaySlider=nil,hopDelayLabel=nil,selectedAutoLoadConfig=nil,autoLoadConfigDropdown=nil,autoLoadToggle=nil,triedServerIds={},teleportPending=false,lastTeleportAttempt=0,lastQueueTime=0}
+local State={isDestroyed=false,isRolling=false,rollDelay=2.5,webhookUrl="",webhookCounters={},webhookRarityFilters={},webhookCounterLabel=nil,sellIncomeThreshold=0,selectedSellRarities={},sellChanceThreshold=0,sellChanceThresholdRaw="",equipBestDelay=1,equipBestLoop=nil,selectedDiceToBuy=nil,diceDropdown=nil,diceInfoLabel=nil,autoSellLoop=nil,autoCollectLoop=nil,autoRebirthLoop=nil,autoRebirthToggle=nil,autoRebirthInfoLabel=nil,autoRebirthTargetLabel=nil,autoRebirthMoneyLabel=nil,autoRebirthStatusLabel=nil,autoRebirthStatsLoop=nil,autoRebirthStatsToggle=nil,autoRebirthStatsInfoLabel=nil,autoRebirthStatsOrder={"Luck","Money","Damage","Trait Luck","Grade Luck","Health"},autoUpgradeLoop=nil,selectedLevelUpSlots={},levelUpLoop=nil,levelUpTarget=100,selectedTradePlayer=nil,tradePlayerDropdown=nil,selectedGiftItem=nil,giftItemDropdown=nil,giftItemMap={},autoGiftLoop=nil,autoGiftToggle=nil,autoGiftUnitLoop=nil,autoGiftUnitToggle=nil,giftUnitMinChance=1e12,giftUnitMaxChance=math.huge,giftUnitMaxIncome=math.huge,selectedRollUnitKeys={},rollUnitDropdown=nil,rollUnitOptionsMap={},gradeTargetDropdown=nil,traitTargetDropdown=nil,autoGradeLoop=nil,autoGradeToggle=nil,autoTraitLoop=nil,autoTraitToggle=nil,gradeInfoLabel=nil,traitInfoLabel=nil,selectedGradeTargets={},selectedTraitTargets={},autoClaimLoop=nil,autoClaimToggle=nil,autoBuyQuestLoop=nil,autoBuyQuestToggle=nil,questShopItems={},selectedShopItem=nil,questShopTicketsLabel=nil,questShopPriceLabel=nil,questShopBuyBtn=nil,slotInfoLabel=nil,slotDropdown=nil,stopAtRebirth=0,fpsBoostRunning=false,fpsBoostLoop=nil,webhookMentionEveryone=false,uiToggleKeybind="",uiEverythingHidden=false,uiMainVisible=true,towerAutoPlay=false,towerLoop=nil,towerStatus="Ready",towerCurrentFloor=0,towerCurrentName="",completeFloorDelay=1.5,playTowerDelay=3,infinityTarget=999999,towerCurrentCycle=0,dragonTarget=100,cursedTarget=100,pirateTarget=100,hiddenLeafTarget=100,slayerTarget=100,shadowTarget=100,autoUsePotion=false,autoUsePotionLoop=nil,selectedPotionCategories={},selectedPotionTowers={},autoUsePotionDelay=2,autoUsePotionThreshold=10,usePotionOnlyOnWeather=false,weatherWebhookLastSent=nil,antiLagActive=false,antiLagConnection=nil,autoUseSpinLoop=nil,selectedSpinTypes={},spinPerEvent=5,spinStopAt=2,spinRequirePotion=true,spinUsedThisEvent={},spinLastEventStart=nil,bruteForceLoopA=nil,bruteForceLoopB=nil,bruteForceToggle=nil,playerDataLoop=nil,playerDataInterval=1,playerDataToggle=nil,playerDataSentCount=0,collectInterval=60,selectedConfig=nil,configName=nil,playerDataCounterLabel=nil,maxPotionTier="IV",fuseMinChance=0,fuseMaxChance=math.huge,fuseMaxIncome=math.huge,fuseMinChanceRaw="",fuseMaxChanceRaw="",fuseMaxIncomeRaw="",autoFuseLoop=nil,autoFuseToggle=nil,fuseInfoLabel=nil,fuseTotalLabel=nil,fuseReadyLabel=nil,fuseTotalCount=0,fuseWebhookSentCount=0,fuseWebhookLabel=nil,fuseWebhookMinIncome=0,fuseWebhookMinIncomeRaw="",fuseWebhookRarityFilter={},autoBuyDiceLoop=nil,autoBuyDiceToggle=nil,autoEquipGearLoop=nil,autoEquipGearToggle=nil,upgradeStatusLabel=nil,upgradeFailCooldown={},selectedGearBuff="Auto (Best Rarity+Total)",maxUnitSlots=32,targetWeatherList={},weatherFinderLoop=nil,weatherFinderToggle=nil,weatherFinderStatus=nil,weatherFinderCurrentLabel=nil,weatherFinderTargetLabel=nil,weatherFinderAttemptsLabel=nil,weatherFinderAttempts=0,weatherFinderHopDelay=10,hopDelaySlider=nil,hopDelayLabel=nil,selectedAutoLoadConfig=nil,autoLoadConfigDropdown=nil,autoLoadToggle=nil,triedServerIds={},teleportPending=false,lastTeleportAttempt=0,lastQueueTime=0,_pickingKeybind=false}
 local isDestroyed=false
 local requestFunc=request or http_request or (syn and syn.request) or (fluxus and fluxus.request)
 local _isMobile=UIS.TouchEnabled and not UIS.KeyboardEnabled
@@ -285,14 +300,27 @@ F.getUnitInfo=function(n,a)
     return i
 end
 F.formatNumber=function(n)
-    local sf={{1e66,"Vi"},{1e63,"Vg"},{1e60,"Nod"},{1e57,"Ocd"},{1e54,"Spd"},{1e51,"Sxd"},{1e48,"Qid"},{1e45,"Qad"},{1e42,"Td"},{1e39,"Dd"},{1e36,"Ud"},{1e33,"Dc"},{1e30,"No"},{1e27,"Oc"},{1e24,"Sp"},{1e21,"Sx"},{1e18,"Qi"},{1e15,"Qd"},{1e12,"T"},{1e9,"B"},{1e6,"M"},{1e3,"K"}}
-    for _,s in ipairs(sf) do if n>=s[1] then return string.format("%.1f%s",n/s[1],s[2]) end end
-    return string.format("%.1f",n)
+    if type(n)~="number" then return tostring(n) end
+    if n == math.huge then return "inf" end
+    if n ~= n then return "nan" end
+    local neg = n < 0
+    local abs = math.abs(n)
+    if abs < 1000 then
+        return tostring(math.floor(abs * 10 + 0.5) / 10):gsub("%.0$","")
+    end
+    for _, entry in ipairs(CFG.SUFFIX_LIST) do
+        if abs >= entry[1] then
+            local v = abs / entry[1]
+            local s = string.format("%.2f", v):gsub("0+$",""):gsub("%.$","")
+            return (neg and "-" or "") .. s .. entry[2]
+        end
+    end
+    return tostring(n)
 end
 F.parseNumberString=function(s)
     if not s then return 0 end
     local ss=tostring(s):lower():gsub("%s+",""):gsub("%$",""):gsub(",","")
-    local np,sx=ss:match("^(%d+%.?%d*)(%a*)")
+    local np,sx=ss:match("^(%-?%d+%.?%d*)(%a*)")
     if not np then return 0 end
     local n=tonumber(np) if not n then return 0 end
     if sx=="" then return n end
@@ -377,9 +405,7 @@ F.pickServer=function()
     local tried = State.triedServerIds or {}
     local list, why = F.fetchServerList()
     if not list then return nil, why end
-
     local BUFFER = 3
-
     local function eligible(s)
         if type(s) ~= "table" or not s.id then return false end
         if s.id == game.JobId or tried[s.id] then return false end
@@ -389,12 +415,10 @@ F.pickServer=function()
         if (maxP - playing) < BUFFER then return false end
         return true
     end
-
     local c = {}
     for _, s in ipairs(list) do
         if eligible(s) then table.insert(c, s) end
     end
-
     if #c == 0 then
         State.triedServerIds = {}
         for _, s in ipairs(list) do
@@ -405,7 +429,6 @@ F.pickServer=function()
         end
         if #c == 0 then return nil, "tidak ada kandidat server (semua sisa slot < " .. BUFFER .. ")" end
     end
-
     return c[math.random(1, #c)]
 end
 F.hopToServer=function()
@@ -427,22 +450,15 @@ F.hopToServer=function()
     F.saveState(st)
     F.queueReload()
     State.teleportPending = true
-
     local playing = tonumber(pick.playing) or 0
     local maxP = tonumber(pick.maxPlayers) or 0
-    print(string.format(
-        "[AutoHop] Hop ke %s (%d/%d, sisa %d slot)",
-        pick.id, playing, maxP, maxP - playing
-    ))
-
+    print(string.format("[AutoHop] Hop ke %s (%d/%d, sisa %d slot)", pick.id, playing, maxP, maxP - playing))
     local TS = game:GetService("TeleportService")
     local opts = Instance.new("TeleportOptions")
     opts.ShouldReserveServer = false
-
     local ok, err = pcall(function()
         TS:TeleportToPlaceInstance(game.PlaceId, pick.id, Players.LocalPlayer, opts)
     end)
-
     if not ok then
         State.teleportPending = false
         print("[AutoHop] Teleport error: " .. tostring(err))
@@ -472,7 +488,6 @@ F.startWeatherFinderLoop=function()
             end
             return false,cur
         end
-
         local function stopFinder(foundName)
             Toggles.autoFindWeather=false
             if State.weatherFinderToggle then State.weatherFinderToggle:SetValue(false) end
@@ -484,26 +499,21 @@ F.startWeatherFinderLoop=function()
             end)
             Library:Notify({Title="Weather Finder",Description="Ketemu "..tostring(foundName).."!",Time=5})
         end
-
         while Toggles.autoFindWeather and not isDestroyed do
             local matched,cur = matchCurrent()
             if matched then
                 stopFinder(cur)
                 break
             end
-
             local wait = F.getHopDelay()
             local elapsed = 0
             local matchedDuringWait = false
             local matchedName = nil
-
             while elapsed < wait and Toggles.autoFindWeather and not isDestroyed do
                 task.wait(1)
                 elapsed = elapsed + 1
                 if State.weatherFinderStatus then
-                    State.weatherFinderStatus:SetText(
-                        "Current: "..tostring(F.getCurrentWeatherName() or "None").." | Hop in "..tostring(wait-elapsed).."s"
-                    )
+                    State.weatherFinderStatus:SetText("Current: "..tostring(F.getCurrentWeatherName() or "None").." | Hop in "..tostring(wait-elapsed).."s")
                 end
                 local m2,c2 = matchCurrent()
                 if m2 then
@@ -512,20 +522,16 @@ F.startWeatherFinderLoop=function()
                     break
                 end
             end
-
             if not Toggles.autoFindWeather or isDestroyed then break end
-
             if matchedDuringWait then
                 stopFinder(matchedName)
                 break
             end
-
             local m3,c3 = matchCurrent()
             if m3 then
                 stopFinder(c3)
                 break
             end
-
             local ok = F.hopToServer()
             if not ok then
                 task.wait(5)
@@ -1387,13 +1393,11 @@ task.spawn(function()while not isDestroyed do if State.rollDelayLabel then State
 eIdx=eIdx+1 State.autoRebirthToggle=MainLeft2.AddToggle(MainLeft2,eIdx,{Text="Auto Rebirth",Default=false,Callback=function(s)Toggles.autoRebirth=s if s then F.startAutoRebirthLoop() else F.stopAutoRebirthLoop() end end})
 F.RegisterUI("autoRebirth",State.autoRebirthToggle)
 eIdx=eIdx+1 F.RegisterUI("stopAtRebirth",MainLeft2.AddSlider(MainLeft2,eIdx,{Text="Stop at Rebirth",Default=MAX_REBIRTH,Min=0,Max=MAX_REBIRTH,Suffix="",Callback=function(v)State.stopAtRebirth=math.floor(v) F.updateRebirthInfo() end}))
-MainLeft2:AddButton({Text="Rebirth Once",Callback=function()if not isDestroyed and Remotes.rebirthSignal then pcall(function()Remotes.rebirthSignal:Fire()end) task.wait(0.5) F.updateRebirthInfo() end end})
 eIdx=eIdx+1 F.RegisterUI("selectSpinType",MainLeft3.AddDropdown(MainLeft3,eIdx,{Text="Spin Type",Values=CFG.SPIN_TYPES,Multi=true,Placeholder="Select...",AllowNull=true,Callback=function(s)State.selectedSpinTypes={} if s and next(s)~=nil then for k,v in pairs(s) do if v==true then State.selectedSpinTypes[k]=true end if type(v)=="string" and v~="" then State.selectedSpinTypes[v]=true end end end end}))
 eIdx=eIdx+1 F.RegisterUI("spinPerEvent",MainLeft3.AddInput(MainLeft3,eIdx,{Text="Per Event",Default="5",Placeholder="5",Finished=true,Callback=function(v)local n=tonumber(v) if n and n>0 then State.spinPerEvent=math.floor(n) else State.spinPerEvent=5 end end}))
 eIdx=eIdx+1 F.RegisterUI("spinStopAt",MainLeft3.AddInput(MainLeft3,eIdx,{Text="Stop At",Default="2",Placeholder="2",Finished=true,Callback=function(v)local n=tonumber(v) if n and n>=0 then State.spinStopAt=math.floor(n) else State.spinStopAt=2 end end}))
 eIdx=eIdx+1 F.RegisterUI("spinRequirePotion",MainLeft3.AddToggle(MainLeft3,eIdx,{Text="Require Luck Potion",Default=true,Callback=function(s)State.spinRequirePotion=s end}))
 eIdx=eIdx+1 F.RegisterUI("autoUseSpin",MainLeft3.AddToggle(MainLeft3,eIdx,{Text="Auto Use Spin",Default=false,Callback=function(s)Toggles.autoUseSpin=s if s then F.startAutoUseSpinLoop() else F.stopAutoUseSpinLoop() end end}))
-MainLeft3:AddButton({Text="Use Spin Once",Callback=function()if not isDestroyed then F.processAutoUseSpin() end end})
 MainRight1:AddButton({Text="Collect All (1-32)",Callback=function()if not isDestroyed then F.collectAllPlots() end end})
 eIdx=eIdx+1 F.RegisterUI("autoCollect",MainRight1.AddToggle(MainRight1,eIdx,{Text="Auto Collect",Default=false,Callback=function(s)Toggles.autoCollect=s if s then F.startAutoCollectLoop() else F.stopAutoCollectLoop() end end}))
 eIdx=eIdx+1 F.RegisterUI("collectInterval",MainRight1.AddSlider(MainRight1,eIdx,{Text="Interval",Default=State.collectInterval,Min=1,Max=60,Suffix="s",Callback=function(v)State.collectInterval=v end}))
@@ -1403,8 +1407,6 @@ eIdx=eIdx+1 F.RegisterUI("maxPotionTier",MainRight3.AddDropdown(MainRight3,eIdx,
 eIdx=eIdx+1 F.RegisterUI("autoUsePotionThreshold",MainRight3.AddSlider(MainRight3,eIdx,{Text="Re-use Threshold",Default=10,Min=1,Max=60,Suffix="s",Callback=function(v)State.autoUsePotionThreshold=math.floor(v) end}))
 eIdx=eIdx+1 F.RegisterUI("usePotionOnlyOnWeather",MainRight3.AddToggle(MainRight3,eIdx,{Text="Only On Weather",Default=false,Callback=function(s)State.usePotionOnlyOnWeather=s end}))
 eIdx=eIdx+1 F.RegisterUI("autoUsePotion",MainRight3.AddToggle(MainRight3,eIdx,{Text="Auto Use Potion",Default=false,Callback=function(s)Toggles.autoUsePotion=s if s then F.startAutoUsePotionLoop() else F.stopAutoUsePotionLoop() end end}))
-MainRight3:AddButton({Text="Use Once",Callback=function()if not isDestroyed then F.processAutoUsePotion() end end})
-MainRight3:AddButton({Text="Check Active",Callback=function()if not isDestroyed then F.printActivePotions() end end})
 State.autoRebirthInfoLabel=MainRight2:AddLabel("Rebirth: -")
 State.autoRebirthTargetLabel=MainRight2:AddLabel("Target: -")
 State.autoRebirthMoneyLabel=MainRight2:AddLabel("Money: - / -")
@@ -1427,7 +1429,6 @@ F.AddPopupButton(State.diceDropdown)
 ShopRight1:AddButton({Text="Buy Selected",Callback=function()if not isDestroyed then F.buySelectedDice() end end})
 eIdx=eIdx+1 State.autoBuyDiceToggle=ShopRight1.AddToggle(ShopRight1,eIdx,{Text="Auto Buy Dice",Default=false,Callback=function(s)Toggles.autoBuyDice=s if s then F.startAutoBuyDiceLoop() else F.stopAutoBuyDiceLoop() end end})
 F.RegisterUI("autoBuyDice",State.autoBuyDiceToggle)
-ShopRight1:AddButton({Text="Buy All Once",Callback=function()if not isDestroyed then task.spawn(function()F.buyAllDice()end) end end})
 State.diceInfoLabel=ShopRight1:AddLabel("Money: -\nDice: -")
 ShopRight1:AddButton({Text="Equip Best Dice",Callback=function()if not isDestroyed then F.equipBestDice() end end})
 eIdx=eIdx+1 UI.dd_sellRarityFilter=ShopLeft1.AddDropdown(ShopLeft1,eIdx,{Text="Rarity Filter",Values=CFG.rarityFilterOptions,Multi=true,Callback=function(s)State.selectedSellRarities=s end})
@@ -1436,10 +1437,8 @@ F.AddPopupButton(UI.dd_sellRarityFilter)
 eIdx=eIdx+1 F.RegisterUI("sellIncomeThreshold",ShopLeft1.AddInput(ShopLeft1,eIdx,{Text="Income Threshold",Default="",Placeholder="e.g. 1.5k",Finished=true,Callback=function(v)if not v or v=="" then State.sellIncomeThreshold=0 else State.sellIncomeThreshold=F.parseNumberString(v) end end}))
 eIdx=eIdx+1 F.RegisterUI("sellChanceThreshold",ShopLeft1.AddInput(ShopLeft1,eIdx,{Text="Max 1 in X",Default="",Placeholder="e.g. 1t",Finished=true,Callback=function(v)State.sellChanceThresholdRaw=v or "" if not v or v=="" then State.sellChanceThreshold=0 else State.sellChanceThreshold=F.parseNumberString(v) end end}))
 eIdx=eIdx+1 F.RegisterUI("autoSell",ShopLeft1.AddToggle(ShopLeft1,eIdx,{Text="Auto Sell",Default=false,Callback=function(s)Toggles.autoSell=s if s then F.startAutoSellLoop() else F.stopAutoSellLoop() end end}))
-ShopLeft1:AddButton({Text="Sell Once",Callback=function()if not isDestroyed then F.processAutoSell() end end})
 eIdx=eIdx+1 F.RegisterUI("autoUpgrade",ShopLeft2.AddToggle(ShopLeft2,eIdx,{Text="Auto Buy Tree",Default=false,Callback=function(s)Toggles.autoUpgrade=s if s then F.startAutoUpgradeLoop() else F.stopAutoUpgradeLoop() end end}))
 State.upgradeStatusLabel=ShopLeft2:AddLabel("Status: Idle")
-ShopLeft2:AddButton({Text="Upgrade Once",Callback=function()if not isDestroyed then task.spawn(function()local b=F.performBulkUpgrade() Library:Notify({Title="Tree",Description="Bought "..b,Time=2})end) end end})
 eIdx=eIdx+1 State.autoClaimToggle=ShopRight2.AddToggle(ShopRight2,eIdx,{Text="Auto Claim Quest",Default=false,Callback=function(s)Toggles.autoClaim=s if s then F.startAutoClaimLoop() else F.stopAutoClaimLoop() end end})
 F.RegisterUI("autoClaim",State.autoClaimToggle)
 ShopRight2:AddButton({Text="Claim Now",Callback=function()if not isDestroyed then F.claimCompletedQuests() Library:Notify({Title="Quest",Description="Claimed!",Time=2}) end end})
@@ -1454,14 +1453,11 @@ task.spawn(function()while not isDestroyed do F.updateQuestShopTickets() task.wa
 State.slotInfoLabel=UnitLeft2:AddLabel("Select slots",true)
 eIdx=eIdx+1 State.slotDropdown=UnitLeft1.AddDropdown(UnitLeft1,eIdx,{Text="Select Slots",Values={},Multi=true,Placeholder="Select...",AllowNull=true,Callback=function(s)State.selectedLevelUpSlots={} if s and next(s)~=nil then for o,e in pairs(s) do if e and State.slotOptionsMap[o] then table.insert(State.selectedLevelUpSlots,State.slotOptionsMap[o]) end end end F.updateSlotInfoLabel() end})
 F.AddPopupButton(State.slotDropdown)
-UnitLeft1:AddButton({Text="Check Plotted",Callback=function()if not DataController or not DataController.Slots or not DataController.Inventory then return end local s=DataController.Slots() if not s or type(s)~="table" then return end F.refreshSlotDropdown() end})
 eIdx=eIdx+1 F.RegisterUI("autoLevelUp",UnitRight1.AddToggle(UnitRight1,eIdx,{Text="Auto Level Up",Default=false,Callback=function(s)Toggles.autoLevelUp=s if s then if #State.selectedLevelUpSlots==0 then Toggles.autoLevelUp=false return end F.startLevelUpLoop() else F.stopLevelUpLoop() end end}))
 eIdx=eIdx+1 F.RegisterUI("targetLevel",UnitRight1.AddSlider(UnitRight1,eIdx,{Text="Target Level",Default=State.levelUpTarget,Min=1,Max=100,Suffix="",Callback=function(v)State.levelUpTarget=math.floor(v) end}))
-UnitRight1:AddButton({Text="Level Up Once",Callback=function()if not isDestroyed then F.levelUpSelectedSlots() end end})
 State.gradeInfoLabel=UnitLeft3:AddLabel("Grade: -")
 eIdx=eIdx+1 State.rollUnitDropdown=UnitLeft3.AddDropdown(UnitLeft3,eIdx,{Text="Select Units",Values={},Multi=true,Placeholder="Select...",AllowNull=true,Callback=function(s)State.selectedRollUnitKeys={} if s and next(s)~=nil then for o,e in pairs(s) do if e and State.rollUnitOptionsMap[o] then table.insert(State.selectedRollUnitKeys,State.rollUnitOptionsMap[o]) end end end F.updateRollUnitInfo() end})
 F.AddPopupButton(State.rollUnitDropdown)
-UnitLeft3:AddButton({Text="Refresh",Callback=function()F.refreshRollUnitDropdown() end})
 eIdx=eIdx+1 State.gradeTargetDropdown=UnitLeft3.AddDropdown(UnitLeft3,eIdx,{Text="Target Grade",Values=CFG.gradeTargetOptions,Multi=true,Default={},AllowNull=true,Callback=function(s)State.selectedGradeTargets={} if s then for k,v in pairs(s) do if v then table.insert(State.selectedGradeTargets,k) end end end end})
 F.RegisterUI("targetGrade",State.gradeTargetDropdown)
 F.AddPopupButton(State.gradeTargetDropdown)
@@ -1496,7 +1492,6 @@ eIdx=eIdx+1 F.RegisterUI("fuseMaxIncome",FuseLeft1.AddInput(FuseLeft1,eIdx,{Text
 eIdx=eIdx+1 State.autoFuseToggle=FuseLeft2.AddToggle(FuseLeft2,eIdx,{Text="Auto Fuse",Default=false,Callback=function(s)Toggles.autoFuse=s if s then F.startAutoFuseLoop() local ae=(State.fuseMinChanceRaw or "")=="" and (State.fuseMaxChanceRaw or "")=="" and (State.fuseMaxIncomeRaw or "")=="" if ae then Library:Notify({Title="Fuse",Description="Fill 1 filter!",Time=3}) end else F.stopAutoFuseLoop() end end})
 F.RegisterUI("autoFuse",State.autoFuseToggle)
 FuseLeft2:AddButton({Text="Fuse Once",Callback=function()if isDestroyed then return end local ok=F.processAutoFuse() if not ok then Library:Notify({Title="Fuse",Description="Not enough (need 3)",Time=2}) end end})
-FuseLeft2:AddButton({Text="Refresh Info",Callback=function()F.updateFuseInfo() end})
 eIdx=eIdx+1 F.RegisterUI("targetWeather",ServerLeft1.AddDropdown(ServerLeft1,eIdx,{Text="Target Weather",Values=CFG.WEATHER_LIST,Multi=true,AllowNull=true,Callback=function(v)State.targetWeatherList={} if type(v)=="table" then for k,vv in pairs(v) do if vv==true then table.insert(State.targetWeatherList,k) end if type(k)=="number" and type(vv)=="string" and vv~="" then table.insert(State.targetWeatherList,vv) end end elseif type(v)=="string" and v~="" then table.insert(State.targetWeatherList,v) end end}))
 F.AddPopupButton(UIRegistry.targetWeather)
 if State.weatherFinderResume and type(State.targetWeatherList)=="table" then
@@ -1552,12 +1547,6 @@ if State.weatherFinderResume and State.targetWeatherList and #State.targetWeathe
         end
     end)
 end
-ServerLeft1:AddButton({Text="Hop Now (Once)",Callback=function()
-    if not State.targetWeatherList or #State.targetWeatherList==0 then Library:Notify({Title="Weather Finder",Description="Pilih target weather dulu!",Time=3}) return end
-    local cur=F.getCurrentWeatherName()
-    if cur then for _,t in ipairs(State.targetWeatherList) do if cur==t then Library:Notify({Title="Weather Finder",Description="Server sekarang sudah "..cur.."!",Time=3}) return end end end
-    F.hopToServer()
-end})
 State.weatherFinderStatus=ServerRight1:AddLabel("Status: Idle",true)
 State.weatherFinderCurrentLabel=ServerRight1:AddLabel("Current: -",true)
 State.weatherFinderTargetLabel=ServerRight1:AddLabel("Target: -",true)
@@ -1568,7 +1557,47 @@ F.RegisterUI("autoLoadConfig",State.autoLoadToggle)
 AutoLoadGroup:AddButton({Text="Load Now",Callback=function()if not State.selectedAutoLoadConfig or State.selectedAutoLoadConfig=="" then Library:Notify({Title="Auto Load",Description="Pilih config dulu!",Time=2}) return end ConfigManager.configs=F.loadConfigsFromFile() if ConfigManager.Load(State.selectedAutoLoadConfig) then Library:Notify({Title="Auto Load",Description="Loaded: "..State.selectedAutoLoadConfig,Time=2}) else Library:Notify({Title="Auto Load",Description="Failed!",Time=2}) end end})
 AutoLoadGroup:AddButton({Text="Refresh List",Callback=function()ConfigManager.configs=F.loadConfigsFromFile() if State.autoLoadConfigDropdown and State.autoLoadConfigDropdown.SetValues then State.autoLoadConfigDropdown:SetValues(ConfigManager.List()) end Library:Notify({Title="Auto Load",Description="List refreshed!",Time=2}) end})
 State.autoLoadStatusLabel=AutoLoadGroup:AddLabel("Status: -")
-eIdx=eIdx+1 F.RegisterUI("keybind",KeybindGroup.AddInput(KeybindGroup,eIdx,{Text="Keybind",Default="",Placeholder="...",Finished=true,Callback=function(v)if not v or v=="" then State.uiToggleKeybind="" return end local c=tostring(v):gsub("%s+",""):upper() local ok,k=pcall(function()return Enum.KeyCode[c] end) if ok and k then State.uiToggleKeybind=c else State.uiToggleKeybind="" end end}))
+eIdx=eIdx+1
+local keybindInput=KeybindGroup.AddInput(KeybindGroup,eIdx,{Text="Keybind",Default="",Placeholder="Click then press a key...",Finished=true,Callback=function(v)
+    if not v or v=="" then State.uiToggleKeybind="" return end
+    local c=tostring(v):gsub("%s+",""):upper()
+    local ok,k=pcall(function()return Enum.KeyCode[c] end)
+    if ok and k then State.uiToggleKeybind=c else State.uiToggleKeybind="" end
+end})
+F.RegisterUI("keybind",keybindInput)
+task.defer(function()
+    local box
+    for _, c in ipairs(keybindInput.Holder:GetDescendants()) do
+        if c:IsA("TextBox") then box = c break end
+    end
+    if not box then return end
+    local picking = false
+    box.Focused:Connect(function()
+        picking = true
+        State._pickingKeybind = true
+        box.Text = ""
+        box.PlaceholderText = "Press a key... (Esc = clear)"
+    end)
+    box.FocusLost:Connect(function()
+        picking = false
+        State._pickingKeybind = false
+        box.PlaceholderText = "Click then press a key..."
+        box.Text = State.uiToggleKeybind ~= "" and State.uiToggleKeybind or ""
+    end)
+    UIS.InputBegan:Connect(function(input, gp)
+        if not picking or gp then return end
+        if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
+        local key = input.KeyCode
+        if key == Enum.KeyCode.Escape then
+            keybindInput:SetValue("")
+            box:ReleaseFocus()
+            return
+        end
+        keybindInput:SetValue(key.Name)
+        Library:Notify({Title="Keybind",Description="Set to: "..key.Name,Time=2})
+        box:ReleaseFocus()
+    end)
+end)
 eIdx=eIdx+1 UI.configDropdown=ConfigGroup.AddDropdown(ConfigGroup,eIdx,{Text="Select Config",Values=ConfigManager.List(),Placeholder="Select...",AllowNull=true,Callback=function(v)State.selectedConfig=v end})
 eIdx=eIdx+1 ConfigGroup.AddInput(ConfigGroup,eIdx,{Text="Config Name",Default="",Placeholder="my_config",Finished=true,Callback=function(v)State.configName=v end})
 ConfigGroup:AddButton({Text="Create Config",Callback=function()if not State.configName or State.configName=="" then Library:Notify({Title="Config",Description="Enter name!",Time=2}) return end if ConfigManager.Save(State.configName) then if UI.configDropdown then UI.configDropdown:SetValues(ConfigManager.List()) end if State.autoLoadConfigDropdown and State.autoLoadConfigDropdown.SetValues then State.autoLoadConfigDropdown:SetValues(ConfigManager.List()) end Library:Notify({Title="Config",Description="Created!",Time=2}) else Library:Notify({Title="Config",Description="Failed!",Time=2}) end end})
@@ -1581,7 +1610,6 @@ MiscLeft2:AddButton({Text="Apply Anti-Lag Once",Callback=function()F.applyAntiLa
 MiscLeft2:AddButton({Text="Redeem All Codes",Callback=function()if isDestroyed then return end task.spawn(function()F.redeemAllCodes() Library:Notify({Title="Codes",Description="Done",Time=2}) end) end})
 eIdx=eIdx+1 F.RegisterUI("equipBest",MiscRight1.AddToggle(MiscRight1,eIdx,{Text="Auto Equip Best",Default=false,Callback=function(s)Toggles.equipBest=s if s then F.startEquipBestLoop() else F.stopEquipBestLoop() end end}))
 eIdx=eIdx+1 F.RegisterUI("equipBestDelay",MiscRight1.AddSlider(MiscRight1,eIdx,{Text="Delay",Default=State.equipBestDelay,Min=0.5,Max=10,Suffix="s",Callback=function(v)State.equipBestDelay=v end}))
-MiscRight1:AddButton({Text="Equip Best Once",Callback=function()if not isDestroyed then F.fireEquipBest() end end})
 eIdx=eIdx+1 F.RegisterUI("dragonTarget",TowerGroup.AddSlider(TowerGroup,eIdx,{Text="Dragon (0=skip)",Default=100,Min=0,Max=100,Suffix="",Callback=function(v)State.dragonTarget=math.floor(v) end}))
 eIdx=eIdx+1 F.RegisterUI("cursedTarget",TowerGroup.AddSlider(TowerGroup,eIdx,{Text="Cursed (0=skip)",Default=100,Min=0,Max=100,Suffix="",Callback=function(v)State.cursedTarget=math.floor(v) end}))
 eIdx=eIdx+1 F.RegisterUI("pirateTarget",TowerGroup.AddSlider(TowerGroup,eIdx,{Text="Pirate (0=skip)",Default=100,Min=0,Max=100,Suffix="",Callback=function(v)State.pirateTarget=math.floor(v) end}))
@@ -1591,11 +1619,8 @@ eIdx=eIdx+1 F.RegisterUI("shadowTarget",TowerGroup.AddSlider(TowerGroup,eIdx,{Te
 eIdx=eIdx+1 F.RegisterUI("infinityTarget",TowerGroup.AddInput(TowerGroup,eIdx,{Text="Infinity (0=skip)",Default="999999",Placeholder="999999",Finished=true,Callback=function(v)local n=tonumber(v) if n and n>=0 then State.infinityTarget=math.floor(n) else State.infinityTarget=999999 end end}))
 eIdx=eIdx+1 UI.towerToggle=TowerGroup.AddToggle(TowerGroup,eIdx,{Text="Auto Farm Tower",Default=false,Callback=function(s)if UI.towerStopping then return end if s then F.startTowerFarmLoop() else F.stopTowerFarmLoop() end end})
 F.RegisterUI("towerAutoPlay",UI.towerToggle)
-TowerGroup:AddButton({Text="Fill Team (Best)",Callback=function()if F.fillTowerTeamManually() then Library:Notify({Title="Tower",Description="Filled!",Time=2}) else Library:Notify({Title="Tower",Description="No units!",Time=2}) end end})
 eIdx=eIdx+1
 F.RegisterUI("gearBuffMode",GearEquipGroup.AddDropdown(GearEquipGroup,eIdx,{Text="Prioritize Buff",Values=CFG.GEAR_BUFF_OPTIONS,Default="Auto (Best Rarity+Total)",Multi=false,AllowNull=false,Callback=function(v)if type(v)=="table" then for k,vv in pairs(v) do if vv==true then State.selectedGearBuff=k break end end elseif type(v)=="string" and v~="" then State.selectedGearBuff=v else State.selectedGearBuff="Auto (Best Rarity+Total)" end end}))
-GearEquipGroup:AddButton({Text="Equip Best",Callback=function()if not isDestroyed then task.spawn(F.equipBestGearAll) end end})
-GearEquipGroup:AddButton({Text="Show Equipped",Callback=function()if not isDestroyed then task.spawn(F.showEquippedGear) end end})
 eIdx=eIdx+1 F.RegisterUI("autoEquipGear",GearEquipGroup.AddToggle(GearEquipGroup,eIdx,{Text="Auto Equip Gear (5s)",Default=false,Callback=function(s)Toggles.autoEquipGear=s if s then F.startAutoEquipGearLoop() else F.stopAutoEquipGearLoop() end end}))
 task.spawn(function()while not isDestroyed do task.wait(30) pcall(F.buildRarityData) pcall(F.refreshRarityDropdowns) end end)
 F.refreshRarityDropdowns()
@@ -1606,7 +1631,7 @@ if not _isMobile then
     if UI.LockBtn and UI.LockBtn.Button then UI.LockBtn.Button.Position=UDim2.fromOffset((UI.ToggleBtn and UI.ToggleBtn.Button and UI.ToggleBtn.Button.Size.X.Offset or 80)+12,6) end
 end
 UIS.InputBegan:Connect(function(input,gp)
-    if gp or isDestroyed then return end
+    if gp or isDestroyed or State._pickingKeybind then return end
     if State.uiToggleKeybind=="" then return end
     local kc=Enum.KeyCode[State.uiToggleKeybind] if not kc then return end
     if input.KeyCode~=kc then return end
